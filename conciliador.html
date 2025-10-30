@@ -1546,14 +1546,14 @@
                         }
                     }
                     
-                    //console.log(`🔍 [CHEQUES DEBUG] Índices encontrados:`, {
+                    /*console.log(`🔍 [CHEQUES DEBUG] Índices encontrados:`, {
                         indiceCheque,
                         numeroCheque,
                         indiceImporte,
                         importe,
                         indiceEstado,
                         estado
-                    });
+                    });*/
                     
                     // Construir el objeto con los datos encontrados
                     const resultado = {
@@ -1662,11 +1662,11 @@
                     const numeroRef = numeroReferencia ? numeroReferencia.toString() : '';
                     const match = numeroCheque.includes(numeroRef);
                     
-                    //console.log('🔍 [CHEQUES MATCH] Comparando:', {
+                    /*console.log('🔍 [CHEQUES MATCH] Comparando:', {
                         numeroCheque,
                         numeroRef,
                         match
-                    });
+                    });*/
                     
                     return match;
                 });
@@ -18925,3 +18925,4 @@
 </body>
 
 </html>
+
