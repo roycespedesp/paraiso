@@ -12637,11 +12637,11 @@
                     
                     // Log de primeras 3 filas para diagnóstico
                     if (filasRevisadas <= 3) {
-                        //console.log(`🔍 [CHEQUES ETAPA 1] Fila ${filasRevisadas}:`, {
+                        /*console.log(`🔍 [CHEQUES ETAPA 1] Fila ${filasRevisadas}:`, {
                             cuenta: cuenta,
                             concepto: concepto,
                             estado: estado
-                        });
+                        });*/
                     }
                     
                     // CORREGIDO: Distribuir cheques según la cuenta que tengan
@@ -12680,14 +12680,14 @@
                             if (chequesEncontrados <= 5) {
                                 const campoUsado = haberCol !== -1 ? 'HABER' : 'IMPORTE';
                                 const valorOriginal = haberCol !== -1 ? fila[haberCol] : fila[importeCol];
-                                //console.log(`✅ [CHEQUES ETAPA 1] Cheque ${chequesEncontrados} encontrado:`, {
+                                /*console.log(`✅ [CHEQUES ETAPA 1] Cheque ${chequesEncontrados} encontrado:`, {
                                     cuenta: cuentaStr,
                                     ref: cheque.ref,
                                     importe: cheque.importe,
                                     campoUsado: campoUsado,
                                     valorOriginal: valorOriginal,
                                     usarHaber: haberCol !== -1
-                                });
+                                });*/
                             }
                         }
                         
@@ -12697,13 +12697,13 @@
                     }
                 }
                 
-                //console.log('🔵 [CHEQUES ETAPA 1] Resumen de procesamiento:', {
+                /*console.log('🔵 [CHEQUES ETAPA 1] Resumen de procesamiento:', {
                     filasRevisadas,
                     totalChequesEncontrados: chequesEncontrados,
                     chequesPorCuenta,
                     chequesParaEstaCuenta: cheques.length,
                     cuentaSolicitada: codigoCuenta
-                });
+                });*/
                 
                 return cheques;
             },
@@ -18922,5 +18922,6 @@
 </body>
 
 </html>
+
 
 
