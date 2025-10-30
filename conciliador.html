@@ -1048,8 +1048,8 @@
                 
                 // Diagnóstico específico para IBK
                 if (name.includes('ibk')) {
-                    console.log(`🔍 [IBK DEBUG] Detectando archivo: ${fileName}`);
-                    console.log(`🔍 [IBK DEBUG] Nombre normalizado: ${name}`);
+                    //console.log(`🔍 [IBK DEBUG] Detectando archivo: ${fileName}`);
+                    //console.log(`🔍 [IBK DEBUG] Nombre normalizado: ${name}`);
                 }
                 
                 // Diagnóstico específico para SBP.USD
@@ -1063,19 +1063,19 @@
                     const coincide = config.archivoPattern.test(name);
                     
                     if (name.includes('ibk')) {
-                        console.log(`🔍 [IBK DEBUG] Probando patrón ${config.alias}: ${config.archivoPattern} -> ${coincide}`);
+                        //console.log(`🔍 [IBK DEBUG] Probando patrón ${config.alias}: ${config.archivoPattern} -> ${coincide}`);
                     }
                     
                     if (coincide) {
                         if (name.includes('ibk')) {
-                            console.log(`✅ [IBK DEBUG] Archivo detectado como: ${config.alias} (${codigo})`);
+                            //console.log(`✅ [IBK DEBUG] Archivo detectado como: ${config.alias} (${codigo})`);
                         }
                         return { codigo, config };
                     }
                 }
                 
                 if (name.includes('ibk')) {
-                    console.log(`❌ [IBK DEBUG] No se pudo detectar cuenta para archivo: ${fileName}`);
+                    //console.log(`❌ [IBK DEBUG] No se pudo detectar cuenta para archivo: ${fileName}`);
                 }
                 
                 return null;
@@ -1231,11 +1231,11 @@
 
             addFiles(files) {
                 files.forEach(file => {
-                    console.log(`🔍 [FILE DEBUG] Procesando archivo: ${file.name}`);
+                    //console.log(`🔍 [FILE DEBUG] Procesando archivo: ${file.name}`);
                     
                     // Manejo especial para archivo cheques.txt
                     if (file.name.toLowerCase() === 'cheques.txt') {
-                        console.log('🔍 [CHEQUES DEBUG] Detectado archivo cheques.txt');
+                        //console.log('🔍 [CHEQUES DEBUG] Detectado archivo cheques.txt');
                         this.processChequesFile(file);
                         // Agregar a la lista visual pero con categoría especial
                         const fileObj = {
@@ -1260,7 +1260,7 @@
                         category: this.categorizeFile(file.name)
                     };
                     
-                    console.log(`🔍 [FILE DEBUG] Archivo categorizado como: ${fileObj.category}`);
+                    //console.log(`🔍 [FILE DEBUG] Archivo categorizado como: ${fileObj.category}`);
                     
                     if (file.name.toLowerCase().includes('sbp.usd')) {
         
@@ -1276,16 +1276,16 @@
             // Función para procesar el archivo cheques.txt
             async processChequesFile(file) {
                 try {
-                    console.log('🔍 [CHEQUES DEBUG] Iniciando procesamiento de cheques.txt');
+                    //console.log('🔍 [CHEQUES DEBUG] Iniciando procesamiento de cheques.txt');
                     
                     // Leer el contenido del archivo
                     const text = await this.readFileAsText(file);
-                    console.log('🔍 [CHEQUES DEBUG] Contenido del archivo leído:', text.length, 'caracteres');
-                    console.log('🔍 [CHEQUES DEBUG] Primeras 500 caracteres del archivo:', text.substring(0, 500));
+                    //console.log('🔍 [CHEQUES DEBUG] Contenido del archivo leído:', text.length, 'caracteres');
+                    //console.log('🔍 [CHEQUES DEBUG] Primeras 500 caracteres del archivo:', text.substring(0, 500));
                     
                     // Convertir el texto a JSON usando el formato específico
                     const chequesData = this.parseChequesTextToJSON(text);
-                    console.log('🔍 [CHEQUES DEBUG] Datos convertidos a JSON:', chequesData);
+                    //console.log('🔍 [CHEQUES DEBUG] Datos convertidos a JSON:', chequesData);
                     
                     // Guardar en localStorage para uso posterior
                     this.saveChequesDataToStorage(chequesData);
@@ -1298,7 +1298,7 @@
                     // this.downloadChequesJSON(chequesData);
                     
                 } catch (error) {
-                    console.error('❌ [CHEQUES ERROR] Error procesando cheques.txt:', error);
+                    //console.error('❌ [CHEQUES ERROR] Error procesando cheques.txt:', error);
                     this.showStatus('Error al procesar cheques.txt: ' + error.message, 'error');
                 }
             },
@@ -1315,22 +1315,22 @@
 
             // Función para convertir texto de cheques a JSON (formato específico)
             parseChequesTextToJSON(text) {
-                console.log('🔍 [CHEQUES DEBUG] Parseando texto a JSON con formato específico...');
+                //console.log('🔍 [CHEQUES DEBUG] Parseando texto a JSON con formato específico...');
                 
                 // Filtramos líneas que empiezan con código (por ejemplo "01-0001")
                 const lineas = text.split('\n')
                     .map(l => l.replace(/\r/g, '')) // limpia retornos
                     .filter(l => /^\d{2}-\d{4}/.test(l.trim()));
 
-                console.log('🔍 [CHEQUES DEBUG] Total de líneas válidas encontradas:', lineas.length);
+                //console.log('🔍 [CHEQUES DEBUG] Total de líneas válidas encontradas:', lineas.length);
 
                 // Analizar el formato del archivo
                 const formatoDetectado = this.analizarFormatoArchivo(lineas);
-                console.log('🔍 [CHEQUES DEBUG] Formato detectado:', formatoDetectado);
+                //console.log('🔍 [CHEQUES DEBUG] Formato detectado:', formatoDetectado);
 
                 // Parseamos cada línea usando el método detectado
                 const cheques = lineas.map((linea, index) => {
-                    console.log(`🔍 [CHEQUES DEBUG] Procesando línea ${index + 1}:`, linea);
+                    //console.log(`🔍 [CHEQUES DEBUG] Procesando línea ${index + 1}:`, linea);
                     
                     let chequeData = null;
                     
@@ -1351,19 +1351,19 @@
                             break;
                     }
                     
-                    console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Resultado:`, chequeData);
+                    //console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Resultado:`, chequeData);
                     return chequeData;
                 });
 
-                console.log('🔍 [CHEQUES DEBUG] Total de cheques procesados:', cheques.length);
+                //console.log('🔍 [CHEQUES DEBUG] Total de cheques procesados:', cheques.length);
                 
                 // Mostrar algunos cheques procesados para debug
-                console.log('🔍 [CHEQUES DEBUG] Primeros 3 cheques procesados:', cheques.slice(0, 3));
+                //console.log('🔍 [CHEQUES DEBUG] Primeros 3 cheques procesados:', cheques.slice(0, 3));
                 
                 // Guardar globalmente para uso posterior
                 window.datosCheques = cheques;
                 
-                console.log('🔍 [CHEQUES DEBUG] Datos guardados en window.datosCheques:', window.datosCheques.length);
+                //console.log('🔍 [CHEQUES DEBUG] Datos guardados en window.datosCheques:', window.datosCheques.length);
                 
                 return cheques;
             },
@@ -1379,7 +1379,7 @@
                     c.cheque.includes(numeroCheque.toString())
                 );
 
-                console.log(`🔎 Resultados para cheque ${numeroCheque}:`, resultado);
+                //console.log(`🔎 Resultados para cheque ${numeroCheque}:`, resultado);
                 return resultado;
             },
 
@@ -1398,16 +1398,16 @@
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                     
-                    console.log('🔍 [CHEQUES DEBUG] Archivo JSON de debug descargado: cheques_debug.json');
+                    //console.log('🔍 [CHEQUES DEBUG] Archivo JSON de debug descargado: cheques_debug.json');
                 } catch (error) {
-                    console.error('❌ [CHEQUES ERROR] Error descargando JSON de debug:', error);
+                    //console.error('❌ [CHEQUES ERROR] Error descargando JSON de debug:', error);
                 }
             },
 
             // Función para parsear línea CSV (separado por comas)
             parsearLineaCSV(linea, index) {
                 const partes = linea.split(',').map(parte => parte.trim());
-                console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes CSV:`, partes);
+                //console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes CSV:`, partes);
                 
                 return {
                     comprobante: partes[0] || '',
@@ -1430,7 +1430,7 @@
             // Función para parsear línea TSV (separado por tabs)
             parsearLineaTSV(linea, index) {
                 const partes = linea.split('\t').map(parte => parte.trim());
-                console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes TSV:`, partes);
+                //console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes TSV:`, partes);
                 
                 return {
                     comprobante: partes[0] || '',
@@ -1453,7 +1453,7 @@
             // Función para parsear línea con espacios múltiples
             parsearLineaEspacios(linea, index) {
                 const partes = linea.split(/\s+/).filter(parte => parte.trim() !== '');
-                console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes espacios:`, partes);
+                //console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Partes espacios:`, partes);
                 
                 // Para espacios, asumimos que los primeros campos son fijos y el resto es texto libre
                 return {
@@ -1476,15 +1476,15 @@
 
             // Función para parsear línea con posiciones fijas
             parsearLineaPosicionesFijas(linea, index) {
-                console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Parsing posiciones fijas`);
-                console.log(`🔍 [CHEQUES DEBUG] Línea completa:`, linea);
+                //console.log(`🔍 [CHEQUES DEBUG] Línea ${index + 1} - Parsing posiciones fijas`);
+                //console.log(`🔍 [CHEQUES DEBUG] Línea completa:`, linea);
                 
                 // Usar regex para extraer campos de manera más precisa
                 const regex = /^(\d{2}-\d{4})\s+(\d{6})\s+(\d{2}\/\d{2}\/\d{4})\s+(\w+)\s+(\d{8})\s+S\/\s+([\d,]+\.\d{2})\s+(.+?)\s+(Cobrado|Entrega|Entregado|Impreso|Anulado|Pendiente)\s+(.+)$/;
                 const match = linea.match(regex);
                 
                 if (match) {
-                    console.log(`🔍 [CHEQUES DEBUG] Regex match exitoso:`, match);
+                    //console.log(`🔍 [CHEQUES DEBUG] Regex match exitoso:`, match);
                     
                     const resultado = {
                         comprobante: match[1] + ' ' + match[2],  // "01-0001 000001"
@@ -1503,14 +1503,14 @@
                         metodo: 'fixed-regex'
                     };
                     
-                    console.log(`🔍 [CHEQUES DEBUG] Resultado final:`, resultado);
+                    //console.log(`🔍 [CHEQUES DEBUG] Resultado final:`, resultado);
                     return resultado;
                 } else {
-                    console.log(`🔍 [CHEQUES DEBUG] Regex no hizo match, usando método alternativo`);
+                    //console.log(`🔍 [CHEQUES DEBUG] Regex no hizo match, usando método alternativo`);
                     
                     // Método alternativo: análisis por partes
                     const partes = linea.split(/\s+/).filter(parte => parte.trim() !== '');
-                    console.log(`🔍 [CHEQUES DEBUG] Partes encontradas:`, partes);
+                    //console.log(`🔍 [CHEQUES DEBUG] Partes encontradas:`, partes);
                     
                     // Buscar el número de cheque (formato: 00042342)
                     let indiceCheque = -1;
@@ -1546,7 +1546,7 @@
                         }
                     }
                     
-                    console.log(`🔍 [CHEQUES DEBUG] Índices encontrados:`, {
+                    //console.log(`🔍 [CHEQUES DEBUG] Índices encontrados:`, {
                         indiceCheque,
                         numeroCheque,
                         indiceImporte,
@@ -1585,14 +1585,14 @@
                         resultado.concepto = conceptoPartes.join(' ');
                     }
                     
-                    console.log(`🔍 [CHEQUES DEBUG] Resultado final (fallback):`, resultado);
+                    //console.log(`🔍 [CHEQUES DEBUG] Resultado final (fallback):`, resultado);
                     return resultado;
                 }
             },
 
             // Función para analizar el formato del archivo y determinar el mejor método de parsing
             analizarFormatoArchivo(lineas) {
-                console.log('🔍 [CHEQUES DEBUG] Analizando formato del archivo...');
+                //console.log('🔍 [CHEQUES DEBUG] Analizando formato del archivo...');
                 
                 if (lineas.length === 0) return 'unknown';
                 
@@ -1604,7 +1604,7 @@
                 let tieneTabs = 0;
                 
                 muestras.forEach((linea, index) => {
-                    console.log(`🔍 [CHEQUES DEBUG] Muestra ${index + 1}:`, linea);
+                    //console.log(`🔍 [CHEQUES DEBUG] Muestra ${index + 1}:`, linea);
                     
                     // Verificar si tiene comas separadoras (no solo en números)
                     // Una línea CSV debería tener múltiples comas separando campos claramente
@@ -1619,7 +1619,7 @@
                     if (linea.includes('\t')) tieneTabs++;
                 });
                 
-                console.log('🔍 [CHEQUES DEBUG] Análisis:', {
+                //console.log('🔍 [CHEQUES DEBUG] Análisis:', {
                     tieneComasSeparadoras,
                     tieneEspaciosMultiples,
                     tieneTabs,
@@ -1628,33 +1628,33 @@
                 
                 // Determinar el mejor método - priorizar espacios múltiples sobre comas
                 if (tieneEspaciosMultiples === muestras.length) {
-                    console.log('🔍 [CHEQUES DEBUG] Formato detectado: Espacios múltiples (posiciones fijas)');
+                    //console.log('🔍 [CHEQUES DEBUG] Formato detectado: Espacios múltiples (posiciones fijas)');
                     return 'fixed';
                 } else if (tieneTabs === muestras.length) {
-                    console.log('🔍 [CHEQUES DEBUG] Formato detectado: TSV (separado por tabs)');
+                    //console.log('🔍 [CHEQUES DEBUG] Formato detectado: TSV (separado por tabs)');
                     return 'tsv';
                 } else if (tieneComasSeparadoras === muestras.length) {
-                    console.log('🔍 [CHEQUES DEBUG] Formato detectado: CSV (separado por comas)');
+                    //console.log('🔍 [CHEQUES DEBUG] Formato detectado: CSV (separado por comas)');
                     return 'csv';
                 } else {
-                    console.log('🔍 [CHEQUES DEBUG] Formato detectado: Posiciones fijas (fallback)');
+                    //console.log('🔍 [CHEQUES DEBUG] Formato detectado: Posiciones fijas (fallback)');
                     return 'fixed';
                 }
             },
 
             // Función para buscar datos de cheques por número de referencia
             buscarDatosChequePorReferencia(numeroReferencia) {
-                console.log('🔍 [CHEQUES MATCH] Buscando cheque para REF:', numeroReferencia);
-                console.log('🔍 [CHEQUES MATCH] window.datosCheques disponible:', !!window.datosCheques);
-                console.log('🔍 [CHEQUES MATCH] Total de cheques en memoria:', window.datosCheques?.length || 0);
+                //console.log('🔍 [CHEQUES MATCH] Buscando cheque para REF:', numeroReferencia);
+                //console.log('🔍 [CHEQUES MATCH] window.datosCheques disponible:', !!window.datosCheques);
+                //console.log('🔍 [CHEQUES MATCH] Total de cheques en memoria:', window.datosCheques?.length || 0);
                 
                 if (!window.datosCheques || !Array.isArray(window.datosCheques)) {
-                    console.log('🔍 [CHEQUES MATCH] No hay datos de cheques disponibles');
+                    //console.log('🔍 [CHEQUES MATCH] No hay datos de cheques disponibles');
                     return null;
                 }
 
                 // Mostrar algunos cheques para debug
-                console.log('🔍 [CHEQUES MATCH] Primeros 3 cheques en memoria:', window.datosCheques.slice(0, 3));
+                //console.log('🔍 [CHEQUES MATCH] Primeros 3 cheques en memoria:', window.datosCheques.slice(0, 3));
 
                 // Buscar por número de cheque exacto o parcial
                 const chequeEncontrado = window.datosCheques.find(cheque => {
@@ -1662,7 +1662,7 @@
                     const numeroRef = numeroReferencia ? numeroReferencia.toString() : '';
                     const match = numeroCheque.includes(numeroRef);
                     
-                    console.log('🔍 [CHEQUES MATCH] Comparando:', {
+                    //console.log('🔍 [CHEQUES MATCH] Comparando:', {
                         numeroCheque,
                         numeroRef,
                         match
@@ -1672,7 +1672,7 @@
                 });
 
                 if (chequeEncontrado) {
-                    console.log('🔍 [CHEQUES MATCH] Cheque encontrado para REF:', numeroReferencia, chequeEncontrado);
+                    //console.log('🔍 [CHEQUES MATCH] Cheque encontrado para REF:', numeroReferencia, chequeEncontrado);
                     return {
                         estado: chequeEncontrado.estado || '',
                         descripcion: chequeEncontrado.concepto || '',
@@ -1681,7 +1681,7 @@
                         importe: chequeEncontrado.importe || ''
                     };
                 } else {
-                    console.log('🔍 [CHEQUES MATCH] No se encontró cheque para REF:', numeroReferencia);
+                    //console.log('🔍 [CHEQUES MATCH] No se encontró cheque para REF:', numeroReferencia);
                     return null;
                 }
             },
@@ -1690,9 +1690,9 @@
             saveChequesDataToStorage(chequesData) {
                 try {
                     localStorage.setItem('chequesData', JSON.stringify(chequesData));
-                    console.log('🔍 [CHEQUES DEBUG] Datos guardados en localStorage');
+                    //console.log('🔍 [CHEQUES DEBUG] Datos guardados en localStorage');
                 } catch (error) {
-                    console.error('❌ [CHEQUES ERROR] Error guardando en localStorage:', error);
+                    //console.error('❌ [CHEQUES ERROR] Error guardando en localStorage:', error);
                 }
             },
 
@@ -2067,9 +2067,9 @@
                     let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
                     
 
-                    console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
-                    console.log(jsonData);
-                    console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
+                    //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
+                    //console.log(jsonData);
+                    //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
 
                     
                     // 🔧 DIAGNÓSTICO DETALLADO: Verificar archivo y configuración
@@ -2101,7 +2101,7 @@
     
                         // Activar logs solo para IBK y IBK.USD
                         // if (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') {
-                        //     console.log(`🔍 [DEBUG ${cuentaConfig.alias}] Validando header:`, headerFila);
+                        //     //console.log(`🔍 [DEBUG ${cuentaConfig.alias}] Validando header:`, headerFila);
                         // }
                         
                         headerFila.forEach((col, idx) => {
@@ -2111,7 +2111,7 @@
                                                    colStr.includes('MONTO') || colStr.includes('DESCRIPCION') || 
                                                    colStr.includes('REFERENCIA') || colStr.includes('MOVIMIENTO');
                             // if (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') {
-                            //     console.log(`  [${cuentaConfig.alias}] Columna ${idx}: "${col}" -> esString: ${esString}, contieneTerminos: ${contieneTerminos}`);
+                            //     //console.log(`  [${cuentaConfig.alias}] Columna ${idx}: "${col}" -> esString: ${esString}, contieneTerminos: ${contieneTerminos}`);
                             // }
                         });
                         
@@ -2126,13 +2126,13 @@
                         );
                         
                         // if (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') {
-                        //     console.log(`🔍 [DEBUG ${cuentaConfig.alias}] Header válido: ${esHeaderValido}`);
+                        //     //console.log(`🔍 [DEBUG ${cuentaConfig.alias}] Header válido: ${esHeaderValido}`);
                         // }
-                        console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
-                        console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
-                        console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
-                        console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
-                        console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
+                        //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
+                        //console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
+                        //console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
+                        //console.log(`🔍 [DEBUG ${cuentaConfig.alias}] `);
+                        //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
 
                         if (!esHeaderValido) {
 
@@ -2153,12 +2153,12 @@
                             // Crear nueva estructura: [header por defecto, ...datos desde dataInicio]
                             const datosEstructurados = [headerPorDefecto];
                             if (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') {
-                                console.log(`🔍 [${cuentaConfig.alias}] USANDO HEADER POR DEFECTO:`, headerPorDefecto);
-                                console.log(`🔍 [${cuentaConfig.alias}] Recorriendo desde fila ${datosDesde} hasta ${jsonData.length}`);
+                                //console.log(`🔍 [${cuentaConfig.alias}] USANDO HEADER POR DEFECTO:`, headerPorDefecto);
+                                //console.log(`🔍 [${cuentaConfig.alias}] Recorriendo desde fila ${datosDesde} hasta ${jsonData.length}`);
                             }
                             for (let i = datosDesde; i < jsonData.length; i++) {
                                 if ((cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') && i < datosDesde + 3) {
-                                    console.log(`🔍 [${cuentaConfig.alias}] Fila ${i}:`, jsonData[i]);
+                                    //console.log(`🔍 [${cuentaConfig.alias}] Fila ${i}:`, jsonData[i]);
                                 }
                                 datosEstructurados.push(jsonData[i]);
                             }
@@ -2170,12 +2170,12 @@
                             // Header válido, usar estructura normal
                             const datosEstructurados = [headerFila];
                             if (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') {
-                                console.log(`✅ [${cuentaConfig.alias}] USANDO HEADER REAL:`, headerFila);
-                                console.log(`✅ [${cuentaConfig.alias}] Recorriendo desde fila ${datosDesde} hasta ${jsonData.length}`);
+                                //console.log(`✅ [${cuentaConfig.alias}] USANDO HEADER REAL:`, headerFila);
+                                //console.log(`✅ [${cuentaConfig.alias}] Recorriendo desde fila ${datosDesde} hasta ${jsonData.length}`);
                             }
                             for (let i = datosDesde; i < jsonData.length; i++) {
                                 if ((cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') && i < datosDesde + 3) {
-                                    console.log(`✅ [${cuentaConfig.alias}] Fila ${i}:`, jsonData[i]);
+                                    //console.log(`✅ [${cuentaConfig.alias}] Fila ${i}:`, jsonData[i]);
                                 }
                                 datosEstructurados.push(jsonData[i]);
                             }
@@ -2448,7 +2448,7 @@
                     for (let i = 0; i < filasSaldo.length; i++) {
                         estadosSaldoCompartidos.set(i, { estado: 'Pendiente', ref: '' });
                     }
-                    console.log(`📊 [MULTI-CUENTA] Map compartido de estados saldo inicializado con ${estadosSaldoCompartidos.size} registros`);
+                    //console.log(`📊 [MULTI-CUENTA] Map compartido de estados saldo inicializado con ${estadosSaldoCompartidos.size} registros`);
                 }
                 
                 // Procesar cada cuenta por separado
@@ -2553,7 +2553,7 @@
                 let datosSaldoConEstados = datosSaldo; // Por defecto usar datos originales
                 
                 if (datosSaldo && datosSaldo.length > 1 && estadosSaldoCompartidos.size > 0) {
-                    console.log(`📊 [MULTI-CUENTA] Aplicando estados finales de saldo compartidos: ${estadosSaldoCompartidos.size} registros`);
+                    //console.log(`📊 [MULTI-CUENTA] Aplicando estados finales de saldo compartidos: ${estadosSaldoCompartidos.size} registros`);
                     
                     // Crear datos de saldo para la hoja de trabajo
                     const headerSaldoOriginal = datosSaldo[0];
@@ -2591,8 +2591,8 @@
                     // Guardar los datos con estados aplicados para pasar a consolidarResultadosMultiCuenta
                     datosSaldoConEstados = [headerSaldo, ...datosSaldoHoja];
                     
-                    console.log(`✅ [MULTI-CUENTA] Estados de saldo aplicados exitosamente`);
-                    console.log(`📊 [MULTI-CUENTA] Datos saldo con estados listos para consolidación: ${datosSaldoConEstados.length} filas`);
+                    //console.log(`✅ [MULTI-CUENTA] Estados de saldo aplicados exitosamente`);
+                    //console.log(`📊 [MULTI-CUENTA] Datos saldo con estados listos para consolidación: ${datosSaldoConEstados.length} filas`);
                 }
                 
                 // Consolidar resultados - PASAR datosSaldoConEstados en lugar de datosSaldo original
@@ -2913,7 +2913,7 @@
                 // Usar datosSaldo con estados aplicados que se pasaron como parámetro
                 // En lugar de usar datos del primer resultado individual
                 const datosSaldoConsolidado = datosSaldo || [];
-                console.log(`📊 [CONSOLIDAR] Usando datosSaldo con estados aplicados: ${datosSaldoConsolidado.length} filas`);
+                //console.log(`📊 [CONSOLIDAR] Usando datosSaldo con estados aplicados: ${datosSaldoConsolidado.length} filas`);
                 
                 return {
                     datosMayor: datosMayorConsolidadoPEN, // MAYOR.PEN (solo cuentas PEN procesadas)
@@ -3010,9 +3010,9 @@
             for (let i = 0; i < filasSaldo.length; i++) {
                 estadosSaldo.set(i, { estado: 'Pendiente', ref: '' });
             }
-            console.log(`📊 [CONCILIACION] Map local de estados saldo inicializado con ${estadosSaldo.size} registros`);
+            //console.log(`📊 [CONCILIACION] Map local de estados saldo inicializado con ${estadosSaldo.size} registros`);
         } else if (estadosSaldoCompartidos) {
-            console.log(`📊 [CONCILIACION] Usando Map compartido de estados saldo con ${estadosSaldo.size} registros`);
+            //console.log(`📊 [CONCILIACION] Usando Map compartido de estados saldo con ${estadosSaldo.size} registros`);
         }
         
         // VERIFICAR QUE LOS ÍNDICES CRÍTICOS ESTÉN BIEN MAPEADOS
@@ -3524,7 +3524,7 @@
                         
                         // Debug para IBK: mostrar registros sin estado
                         if ((cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD') && !tieneDatosReales && filaOriginal && filaOriginal.length > 0) {
-                           /* console.log('🔍 [DEBUG IBK] Registro sin estado:', {
+                           /* //console.log('🔍 [DEBUG IBK] Registro sin estado:', {
                                 fecha: fechaExtracto,
                                 tieneFecha: tieneFecha,
                                 cargo: cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD' ? filaOriginal[7] : 'N/A',
@@ -3698,9 +3698,9 @@
         // Solo aplicar individualmente si no hay Map compartido
         if (!estadosSaldoCompartidos && datosSaldo && datosSaldo.length > 1 && estadosSaldo.size > 0) {
             this.aplicarEstadosASaldo(datosSaldoHoja, estadosSaldo);
-            console.log(`📊 [CONCILIACION] Estados de saldo aplicados individualmente para cuenta`);
+            //console.log(`📊 [CONCILIACION] Estados de saldo aplicados individualmente para cuenta`);
         } else if (estadosSaldoCompartidos) {
-            console.log(`📊 [CONCILIACION] Estados de saldo se aplicarán al final en modo multi-cuenta`);
+            //console.log(`📊 [CONCILIACION] Estados de saldo se aplicarán al final en modo multi-cuenta`);
         }
         if (datosSaldoHoja && datosSaldoHoja.length > 0) {
         }
@@ -10748,7 +10748,7 @@
                 // ETAPA 1: Identificar candidatos MAYOR (LIBRO="01" + INICIA CON DEPOSITO BANCARIO)
                 const candidatosPaso6 = [];
                 
-                console.log(`🔍 [IBK PASO 6] Buscando depósitos bancarios para ${cuentaConfig.alias}`);
+                //console.log(`🔍 [IBK PASO 6] Buscando depósitos bancarios para ${cuentaConfig.alias}`);
                 
                 for (let i = 0; i < filasFiltradasMayor.length; i++) {
                     if (estadosFilas.has(i)) continue;
@@ -11558,7 +11558,7 @@
                 const candidatosExtracto = [];
                 let totalCargoExtracto = 0;
                 
-                console.log(`🔍 [IBK PASO 11] Buscando ITF en extracto para ${cuentaConfig.alias}`);
+                //console.log(`🔍 [IBK PASO 11] Buscando ITF en extracto para ${cuentaConfig.alias}`);
                 
                 for (let j = 0; j < extractoProcesable.length; j++) {
                     if (estadosExtracto.has(j)) continue;
@@ -11583,7 +11583,7 @@
                         candidatosExtractoITF++;
                         totalCargoExtracto += cargoAbsoluto;
                         
-                        console.log(`✅ [IBK PASO 11] ITF encontrado: Movimiento="${movimiento}", Cargo=${cargoAbsoluto}`);
+                        //console.log(`✅ [IBK PASO 11] ITF encontrado: Movimiento="${movimiento}", Cargo=${cargoAbsoluto}`);
                         
                         candidatosExtracto.push({
                             indice: j,
@@ -12542,28 +12542,28 @@
 
             // === FUNCIÓN PARA OBTENER CHEQUES NO COBRADOS DE SALDOS ===
             obtenerChequesNoCobrados(datosCompletos, codigoCuenta) {
-                console.log('🔵 [CHEQUES ETAPA 1] Iniciando obtenerChequesNoCobrados para cuenta:', codigoCuenta);
+                //console.log('🔵 [CHEQUES ETAPA 1] Iniciando obtenerChequesNoCobrados para cuenta:', codigoCuenta);
                 
                 // Usar los datos procesados del OUTPUT SALDO en lugar del input
                 let datosSaldo = null;
                 
                 if (this.outputWorkbook && this.outputWorkbook.Sheets['SALDO']) {
-                    console.log('🔵 [CHEQUES ETAPA 1] Leyendo desde outputWorkbook.Sheets[SALDO]');
+                    //console.log('🔵 [CHEQUES ETAPA 1] Leyendo desde outputWorkbook.Sheets[SALDO]');
                     const saldoSheet = this.outputWorkbook.Sheets['SALDO'];
                     datosSaldo = XLSX.utils.sheet_to_json(saldoSheet, { header: 1, defval: '' });
                 } else {
-                    console.log('🔵 [CHEQUES ETAPA 1] Usando datosCompletos.resultado.datosSaldo (fallback)');
+                    //console.log('🔵 [CHEQUES ETAPA 1] Usando datosCompletos.resultado.datosSaldo (fallback)');
                     datosSaldo = datosCompletos?.resultado?.datosSaldo;
                 }
                 
-                console.log('🔵 [CHEQUES ETAPA 1] Datos SALDO obtenidos:', {
+                //console.log('🔵 [CHEQUES ETAPA 1] Datos SALDO obtenidos:', {
                     existe: !!datosSaldo,
                     esArray: Array.isArray(datosSaldo),
                     filas: datosSaldo ? datosSaldo.length : 0
                 });
                 
                 if (!Array.isArray(datosSaldo) || datosSaldo.length === 0) {
-                    console.log('❌ [CHEQUES ETAPA 1] No hay datos SALDO disponibles');
+                    //console.log('❌ [CHEQUES ETAPA 1] No hay datos SALDO disponibles');
                     return [];
                 }
                 
@@ -12583,11 +12583,11 @@
                 }
 
                 if (headerIndex === -1) {
-                    console.log('❌ [CHEQUES ETAPA 1] No se encontró header en SALDO');
+                    //console.log('❌ [CHEQUES ETAPA 1] No se encontró header en SALDO');
                     return [];
                 }
                 
-                console.log('🔵 [CHEQUES ETAPA 1] Header encontrado en fila:', headerIndex);
+                //console.log('🔵 [CHEQUES ETAPA 1] Header encontrado en fila:', headerIndex);
                 const headers = datosSaldo[headerIndex];
                 
                 // Buscar columnas según la estructura del SALDO OUTPUT PROCESADO
@@ -12601,7 +12601,7 @@
                 const importeCol = haberCol !== -1 ? haberCol : headers.findIndex(h => h && h.toString().toUpperCase() === 'IMPORTE'); // Columna H o O
                 const estadoCol = headers.findIndex(h => h && h.toString().toUpperCase() === 'ESTADO'); // Columna P (15)
 
-                console.log('🔵 [CHEQUES ETAPA 1] Columnas identificadas (índices):', {
+                //console.log('🔵 [CHEQUES ETAPA 1] Columnas identificadas (índices):', {
                     cuentaCol,
                     conceptoCol,
                     fdocCol,
@@ -12612,11 +12612,11 @@
                     estadoCol
                 });
                 
-                console.log('🔵 [CHEQUES ETAPA 1] Headers completos:', headers);
-                console.log('🔵 [CHEQUES ETAPA 1] Buscando concepto exacto "Concepto" y estado "ESTADO"');
+                //console.log('🔵 [CHEQUES ETAPA 1] Headers completos:', headers);
+                //console.log('🔵 [CHEQUES ETAPA 1] Buscando concepto exacto "Concepto" y estado "ESTADO"');
 
                 if (conceptoCol === -1 || cuentaCol === -1 || estadoCol === -1) {
-                    console.log('❌ [CHEQUES ETAPA 1] Columnas necesarias no encontradas');
+                    //console.log('❌ [CHEQUES ETAPA 1] Columnas necesarias no encontradas');
                     return [];
                 }
                 // Procesar filas de datos
@@ -12624,7 +12624,7 @@
                 let chequesEncontrados = 0;
                 let chequesPorCuenta = {};
                 
-                console.log('🔵 [CHEQUES ETAPA 1] Iniciando procesamiento de filas...');
+                //console.log('🔵 [CHEQUES ETAPA 1] Iniciando procesamiento de filas...');
                 
                 for (let i = headerIndex + 1; i < datosSaldo.length; i++) {
                     const fila = datosSaldo[i];
@@ -12637,7 +12637,7 @@
                     
                     // Log de primeras 3 filas para diagnóstico
                     if (filasRevisadas <= 3) {
-                        console.log(`🔍 [CHEQUES ETAPA 1] Fila ${filasRevisadas}:`, {
+                        //console.log(`🔍 [CHEQUES ETAPA 1] Fila ${filasRevisadas}:`, {
                             cuenta: cuenta,
                             concepto: concepto,
                             estado: estado
@@ -12680,7 +12680,7 @@
                             if (chequesEncontrados <= 5) {
                                 const campoUsado = haberCol !== -1 ? 'HABER' : 'IMPORTE';
                                 const valorOriginal = haberCol !== -1 ? fila[haberCol] : fila[importeCol];
-                                console.log(`✅ [CHEQUES ETAPA 1] Cheque ${chequesEncontrados} encontrado:`, {
+                                //console.log(`✅ [CHEQUES ETAPA 1] Cheque ${chequesEncontrados} encontrado:`, {
                                     cuenta: cuentaStr,
                                     ref: cheque.ref,
                                     importe: cheque.importe,
@@ -12697,7 +12697,7 @@
                     }
                 }
                 
-                console.log('🔵 [CHEQUES ETAPA 1] Resumen de procesamiento:', {
+                //console.log('🔵 [CHEQUES ETAPA 1] Resumen de procesamiento:', {
                     filasRevisadas,
                     totalChequesEncontrados: chequesEncontrados,
                     chequesPorCuenta,
@@ -13382,15 +13382,15 @@
                     
                     // Función para calcular cheques no cobrados desde datos JSON almacenados
                     const calcularChequesNoCobradosJSON = () => {
-                        console.log('🔍 [JSON FILTER] Calculando cheques no cobrados desde datos JSON...');
+                        //console.log('🔍 [JSON FILTER] Calculando cheques no cobrados desde datos JSON...');
                         
                         if (!window.datosHojaTrabajoJSON || !window.datosHojaTrabajoJSON.saldo) {
-                            console.log('⚠️ [JSON FILTER] No hay datos JSON disponibles');
+                            //console.log('⚠️ [JSON FILTER] No hay datos JSON disponibles');
                             return 0;
                         }
                         
                         const datosSaldo = window.datosHojaTrabajoJSON.saldo;
-                        console.log('🔍 [JSON FILTER] Datos SALDO disponibles:', datosSaldo.length, 'filas');
+                        //console.log('🔍 [JSON FILTER] Datos SALDO disponibles:', datosSaldo.length, 'filas');
                         
                         if (datosSaldo.length === 0) {
                             return 0;
@@ -13412,7 +13412,7 @@
                             }
                             
                             if (headerIndex === -1) {
-                                console.log('⚠️ [JSON FILTER] No se encontró header en datos SALDO');
+                                //console.log('⚠️ [JSON FILTER] No se encontró header en datos SALDO');
                                 return 0;
                             }
                             
@@ -13426,11 +13426,11 @@
                             const importeCol = headers.findIndex(h => 
                                 h && h.toString().toUpperCase().includes('IMPORTE'));
                             
-                            console.log('🔍 [JSON FILTER] Headers encontrados:', headers);
-                            console.log('🔍 [JSON FILTER] Índices - Concepto:', conceptoCol, 'Estado:', estadoCol, 'Haber:', haberCol, 'Importe:', importeCol);
+                            //console.log('🔍 [JSON FILTER] Headers encontrados:', headers);
+                            //console.log('🔍 [JSON FILTER] Índices - Concepto:', conceptoCol, 'Estado:', estadoCol, 'Haber:', haberCol, 'Importe:', importeCol);
                             
                             if (conceptoCol === -1 || estadoCol === -1 || haberCol === -1 || importeCol === -1) {
-                                console.log('⚠️ [JSON FILTER] No se encontraron todas las columnas necesarias');
+                                //console.log('⚠️ [JSON FILTER] No se encontraron todas las columnas necesarias');
                                 return 0;
                             }
                             
@@ -13452,23 +13452,23 @@
                                 // Log para debugging
                                 if (concepto && concepto.includes('CHEQUES')) {
                                     filasConConcepto++;
-                                    console.log('🔍 [JSON FILTER] Fila con concepto cheques:', { concepto, estado, haber, importe });
+                                    //console.log('🔍 [JSON FILTER] Fila con concepto cheques:', { concepto, estado, haber, importe });
                                 }
                                 
                                 // Aplicar filtros
                                 if (concepto === '(-) CHEQUES NO COBRADOS' &&
                                     estado === 'pendiente' &&
                                     haber > 0) {
-                                    console.log('✅ [JSON FILTER] Fila que cumple filtros:', { concepto, estado, haber, importe });
+                                    //console.log('✅ [JSON FILTER] Fila que cumple filtros:', { concepto, estado, haber, importe });
                                     totalCheques += importe;
                                 }
                             }
                             
-                            console.log('🔍 [JSON FILTER] Resumen - Filas procesadas:', filasProcesadas, 'Con concepto cheques:', filasConConcepto, 'Total calculado:', totalCheques);
+                            //console.log('🔍 [JSON FILTER] Resumen - Filas procesadas:', filasProcesadas, 'Con concepto cheques:', filasConConcepto, 'Total calculado:', totalCheques);
                             return totalCheques;
                             
                         } catch (error) {
-                            console.error('❌ [JSON FILTER] Error calculando cheques:', error);
+                            //console.error('❌ [JSON FILTER] Error calculando cheques:', error);
                             return 0;
                         }
                     };
@@ -13529,11 +13529,11 @@
 
                     // Función para calcular cheques no cobrados desde datos SALDO
                     const calcularChequesNoCobrados = (datosSaldo) => {
-                        console.log('🔍 [CALCULAR CHEQUES] Iniciando cálculo...');
-                        console.log('🔍 [CALCULAR CHEQUES] Datos SALDO:', datosSaldo);
+                        //console.log('🔍 [CALCULAR CHEQUES] Iniciando cálculo...');
+                        //console.log('🔍 [CALCULAR CHEQUES] Datos SALDO:', datosSaldo);
                         
                         if (!datosSaldo || !Array.isArray(datosSaldo) || datosSaldo.length === 0) {
-                            console.log('⚠️ [CALCULAR CHEQUES] No hay datos SALDO disponibles');
+                            //console.log('⚠️ [CALCULAR CHEQUES] No hay datos SALDO disponibles');
                             return 0;
                         }
 
@@ -13575,8 +13575,8 @@
                             let filasProcesadas = 0;
                             let filasConConcepto = 0;
                             
-                            console.log('🔍 [CALCULAR CHEQUES] Headers encontrados:', headers);
-                            console.log('🔍 [CALCULAR CHEQUES] Índices - Concepto:', conceptoCol, 'Estado:', estadoCol, 'Haber:', haberCol, 'Importe:', importeCol);
+                            //console.log('🔍 [CALCULAR CHEQUES] Headers encontrados:', headers);
+                            //console.log('🔍 [CALCULAR CHEQUES] Índices - Concepto:', conceptoCol, 'Estado:', estadoCol, 'Haber:', haberCol, 'Importe:', importeCol);
                             
                             for (let i = headerIndex + 1; i < datosSaldo.length; i++) {
                                 const fila = datosSaldo[i];
@@ -13591,22 +13591,22 @@
                                 // Log para debugging
                                 if (concepto && concepto.includes('CHEQUES')) {
                                     filasConConcepto++;
-                                    console.log('🔍 [CALCULAR CHEQUES] Fila con concepto cheques:', { concepto, estado, haber, importe });
+                                    //console.log('🔍 [CALCULAR CHEQUES] Fila con concepto cheques:', { concepto, estado, haber, importe });
                                 }
 
                                 // Aplicar filtros
                                 if (concepto === '(-) CHEQUES NO COBRADOS' &&
                                     estado === 'pendiente' &&
                                     haber > 0) {
-                                    console.log('✅ [CALCULAR CHEQUES] Fila que cumple filtros:', { concepto, estado, haber, importe });
+                                    //console.log('✅ [CALCULAR CHEQUES] Fila que cumple filtros:', { concepto, estado, haber, importe });
                                     totalCheques += importe;
                                 }
                             }
 
-                            console.log('🔍 [CALCULAR CHEQUES] Resumen - Filas procesadas:', filasProcesadas, 'Con concepto cheques:', filasConConcepto, 'Total calculado:', totalCheques);
+                            //console.log('🔍 [CALCULAR CHEQUES] Resumen - Filas procesadas:', filasProcesadas, 'Con concepto cheques:', filasConConcepto, 'Total calculado:', totalCheques);
                             return totalCheques;
                         } catch (error) {
-                            console.error('Error calculando cheques no cobrados:', error);
+                            //console.error('Error calculando cheques no cobrados:', error);
                             return 0;
                         }
                     };
@@ -13687,9 +13687,9 @@
                     const wsResumen = XLSX.utils.aoa_to_sheet(resumenData);
                     
                     // Log para verificar que las fórmulas se aplicaron correctamente
-                    console.log('🔍 [RESUMEN] ✅ Fórmulas de AJUSTE DIF CAMBIO agregadas');
-                    console.log('🔍 [RESUMEN] 📊 Total de cuentas procesadas:', cuentasData.length);
-                    console.log('🔍 [RESUMEN] 🔄 Fórmula aplicada: =E{fila}-D{fila} para cada cuenta');
+                    //console.log('🔍 [RESUMEN] ✅ Fórmulas de AJUSTE DIF CAMBIO agregadas');
+                    //console.log('🔍 [RESUMEN] 📊 Total de cuentas procesadas:', cuentasData.length);
+                    //console.log('🔍 [RESUMEN] 🔄 Fórmula aplicada: =E{fila}-D{fila} para cada cuenta');
                     
                     XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen");
                     
@@ -13757,24 +13757,24 @@
                         // Solo para pestañas con códigos de cuenta válidos: Agregar título especial
                         if (codigoCuentaActual) {
                             // DEBUG: Guardar JSON completo para análisis
-                            console.log('🔍 [DEBUG] window.datosHojaTrabajoJSON completo:', window.datosHojaTrabajoJSON);
+                            //console.log('🔍 [DEBUG] window.datosHojaTrabajoJSON completo:', window.datosHojaTrabajoJSON);
                             
                             // DEBUG: JSON disponible en consola (sin descarga automática)
-                            console.log('📁 [DEBUG] JSON disponible en window.datosHojaTrabajoJSON');
+                            //console.log('📁 [DEBUG] JSON disponible en window.datosHojaTrabajoJSON');
                             
-                            console.log(`🔍 [DEBUG] Procesando ${nombrePestaña} con código de cuenta: ${codigoCuentaActual}`);
+                            //console.log(`🔍 [DEBUG] Procesando ${nombrePestaña} con código de cuenta: ${codigoCuentaActual}`);
                             
                             // CHEQUES NO COBRADOS CONSOLIDADOS (PARTE 1 + PARTE 2)
-                            console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cheques No Cobrados');
+                            //console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cheques No Cobrados');
                             
                             let totalChequesConsolidado = 0;
                             let todosChequesDetalles = [];
                             
                             // PARTE 1: CHEQUES NO COBRADOS DESDE SALDO
-                            console.log('🔍 [DEBUG] Procesando Cheques No Cobrados - Parte 1 desde SALDO');
+                            //console.log('🔍 [DEBUG] Procesando Cheques No Cobrados - Parte 1 desde SALDO');
                             
                             if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                                console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                                //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                                 
                                 const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                                 const headers = datosSaldo[0];
@@ -13793,11 +13793,11 @@
                                            item['ESTADO'] === 'Pendiente';
                                 });
 
-                                console.log('🔍 [DEBUG] Cheques Parte 1 encontrados:', chequesNoCobradosParte1.length);
+                                //console.log('🔍 [DEBUG] Cheques Parte 1 encontrados:', chequesNoCobradosParte1.length);
                                 
                                 const totalParte1 = chequesNoCobradosParte1.reduce((sum, item) => sum + (parseFloat(item['HABER']) || 0), 0);
                                 totalChequesConsolidado += totalParte1;
-                                console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
+                                //console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
                                 
                                 // Agregar detalles de Parte 1
                                 chequesNoCobradosParte1.forEach(cheque => {
@@ -13824,10 +13824,10 @@
                             }
                             
                             // PARTE 2: CHEQUES NO COBRADOS DESDE MAYOR.PEN
-                            console.log('🔍 [DEBUG] Procesando Cheques No Cobrados - Parte 2 desde MAYOR.PEN');
+                            //console.log('🔍 [DEBUG] Procesando Cheques No Cobrados - Parte 2 desde MAYOR.PEN');
                             
                             if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.mayor && Array.isArray(window.datosHojaTrabajoJSON.mayor)) {
-                                console.log('🔍 [DEBUG] Datos MAYOR.PEN disponibles:', window.datosHojaTrabajoJSON.mayor.length, 'filas');
+                                //console.log('🔍 [DEBUG] Datos MAYOR.PEN disponibles:', window.datosHojaTrabajoJSON.mayor.length, 'filas');
                                 
                                 const datosMayor = window.datosHojaTrabajoJSON.mayor;
                                 
@@ -13839,11 +13839,11 @@
                                            item[4] === '02';            // LIBRO (índice 4)
                                 });
                                 
-                                console.log('🔍 [DEBUG] Cheques Parte 2 encontrados:', chequesParte2.length);
+                                //console.log('🔍 [DEBUG] Cheques Parte 2 encontrados:', chequesParte2.length);
                                 
                                 const totalParte2 = chequesParte2.reduce((sum, item) => sum + (parseFloat(item[13]) || 0), 0);
                                 totalChequesConsolidado += totalParte2;
-                                console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
+                                //console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
                                 
                                 // Agregar detalles de Parte 2
                                 chequesParte2.forEach(cheque => {
@@ -13870,14 +13870,14 @@
                             
                             // Agregar título consolidado y todos los detalles
                             if (totalChequesConsolidado > 0 || todosChequesDetalles.length > 0) {
-                                console.log('🔍 [DEBUG] Total consolidado calculado:', totalChequesConsolidado);
+                                //console.log('🔍 [DEBUG] Total consolidado calculado:', totalChequesConsolidado);
                                 
                                 // Agregar línea en blanco para diferenciación visual
                                 datosConciliacion.push(['']);
                                 
                                 // CORRECCIÓN DE SIGNO: Para conceptos (-), el total debe ser negativo
                                 const totalConSignoCorrecto = -Math.abs(totalChequesConsolidado);
-                                console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
+                                //console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
                                 
                                 // Agregar título principal CONSOLIDADO CON TOTAL
                                 datosConciliacion.push(['(-) CHEQUES NO COBRADOS', '', '', '', totalConSignoCorrecto, '', '', '', '', '']);
@@ -13894,16 +13894,16 @@
                         }
                         
                         // DEPOSITOS EN BANCOS NO REGISTRADOS EN LIBROS CONSOLIDADOS (PARTE 1 + PARTE 2 + PARTE 3 + PARTE 4)
-                        console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Depósitos en Bancos No Registrados en Libros');
+                        //console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Depósitos en Bancos No Registrados en Libros');
                         
                         let totalDepositosBancosConsolidado = 0;
                         let todosDepositosBancosDetalles = [];
                         
                         // PARTE 1: DEPOSITOS EN BANCOS DESDE EXTRACT DINÁMICO
-                        console.log(`🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 1 desde ${nombrePestaña} Extract`);
+                        //console.log(`🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 1 desde ${nombrePestaña} Extract`);
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.extractos && window.datosHojaTrabajoJSON.extractos[codigoCuentaActual]) {
-                            console.log(`🔍 [DEBUG] Datos ${nombrePestaña} Extract disponibles:`, window.datosHojaTrabajoJSON.extractos[codigoCuentaActual].length, 'filas');
+                            //console.log(`🔍 [DEBUG] Datos ${nombrePestaña} Extract disponibles:`, window.datosHojaTrabajoJSON.extractos[codigoCuentaActual].length, 'filas');
                             
                             const datosExtracto = window.datosHojaTrabajoJSON.extractos[codigoCuentaActual];
                             
@@ -13922,7 +13922,7 @@
                                     h.toString().toUpperCase().includes('OPERACION') ||
                                     h.toString().toUpperCase().includes('VALOR')
                                 ));
-                                console.log('🔍 [DEBUG BBVA] Búsqueda alternativa de fecha:', fechaColBBVA);
+                                //console.log('🔍 [DEBUG BBVA] Búsqueda alternativa de fecha:', fechaColBBVA);
                             }
                             
                             // Usar la columna de fecha correcta
@@ -13930,11 +13930,11 @@
                             
                             // DEBUG específico para BBVA
                             if (nombrePestaña === 'BBVA' || nombrePestaña === 'BBVA.USD') {
-                                console.log('🔍 [DEBUG BBVA] Headers encontrados:', headers);
-                                console.log('🔍 [DEBUG BBVA] Búsqueda de FECHA:', fechaCol);
-                                console.log('🔍 [DEBUG BBVA] Headers que contienen FECHA:', headers.filter(h => h && h.toString().toUpperCase().includes('FECHA')));
-                                console.log('🔍 [DEBUG BBVA] Headers que contienen OPERACION:', headers.filter(h => h && h.toString().toUpperCase().includes('OPERACION')));
-                                console.log('🔍 [DEBUG BBVA] Headers que contienen VALOR:', headers.filter(h => h && h.toString().toUpperCase().includes('VALOR')));
+                                //console.log('🔍 [DEBUG BBVA] Headers encontrados:', headers);
+                                //console.log('🔍 [DEBUG BBVA] Búsqueda de FECHA:', fechaCol);
+                                //console.log('🔍 [DEBUG BBVA] Headers que contienen FECHA:', headers.filter(h => h && h.toString().toUpperCase().includes('FECHA')));
+                                //console.log('🔍 [DEBUG BBVA] Headers que contienen OPERACION:', headers.filter(h => h && h.toString().toUpperCase().includes('OPERACION')));
+                                //console.log('🔍 [DEBUG BBVA] Headers que contienen VALOR:', headers.filter(h => h && h.toString().toUpperCase().includes('VALOR')));
                             }
                             
                             // Para IBK: usar CARGO y ABONO en lugar de MONTO
@@ -13942,12 +13942,12 @@
                             const abonoCol = headers.findIndex(h => h && h.toString().toUpperCase().includes('ABONO'));
                             const esIBK = (cargoCol !== -1 && abonoCol !== -1 && montoCol === -1);
                             
-                            console.log('🔍 [DEBUG] Columnas encontradas - ESTADO:', estadoCol, 'MONTO/IMPORTE:', montoCol, 'FECHA:', fechaCol, 'FECHA_FINAL:', fechaColFinal);
+                            //console.log('🔍 [DEBUG] Columnas encontradas - ESTADO:', estadoCol, 'MONTO/IMPORTE:', montoCol, 'FECHA:', fechaCol, 'FECHA_FINAL:', fechaColFinal);
                             if (esIBK) {
-                                console.log('🔍 [DEBUG] Detectado IBK - CARGO:', cargoCol, 'ABONO:', abonoCol);
+                                //console.log('🔍 [DEBUG] Detectado IBK - CARGO:', cargoCol, 'ABONO:', abonoCol);
                             }
-                            console.log('🔍 [DEBUG] Headers completos:', headers);
-                            console.log('🔍 [DEBUG] Primeros 3 registros de muestra:', datosExtracto.slice(1, 4));
+                            //console.log('🔍 [DEBUG] Headers completos:', headers);
+                            //console.log('🔍 [DEBUG] Primeros 3 registros de muestra:', datosExtracto.slice(1, 4));
                             
                             if (estadoCol !== -1 && (montoCol !== -1 || esIBK)) {
                                 // Filtrar depósitos Parte 1: Estado=Pendiente, Monto>0
@@ -13965,8 +13965,8 @@
                                     }
                                 });
                                 
-                                console.log('🔍 [DEBUG] Depósitos Parte 1 encontrados:', depositosParte1.length);
-                                console.log('🔍 [DEBUG] Registros que cumplen criterios:', depositosParte1.map(item => ({
+                                //console.log('🔍 [DEBUG] Depósitos Parte 1 encontrados:', depositosParte1.length);
+                                //console.log('🔍 [DEBUG] Registros que cumplen criterios:', depositosParte1.map(item => ({
                                     estado: item[estadoCol],
                                     monto: esIBK ? item[abonoCol] : item[montoCol],
                                     concepto: item[2] || 'N/A'
@@ -13977,7 +13977,7 @@
                                     return sum + monto;
                                 }, 0);
                                 totalDepositosBancosConsolidado += totalParte1;
-                                console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
+                                //console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
                                 
                                 // Agregar detalles de Parte 1
                                 depositosParte1.forEach(deposito => {
@@ -14019,23 +14019,23 @@
                         /*Cambio solicitado: OBSERVACIÓN 5 - Comentar PARTE 2 de DEPOSITOS EN BANCOS - 27102025 20:02*/
                         
                         // PARTE 2: DEPOSITOS EN BANCOS DESDE TARJETAS
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 2 desde TARJETAS');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 2 desde TARJETAS');
                         // OBSERVACIÓN 3 - Usar función duplicada específica para PARTE 2 - 27102025 19:52
                         try {
 
-                            console.error('🔍 [DEBUG] codigoCuentaActual:', codigoCuentaActual);
-                            //console.error('🔍 [DEBUG] datosTarjetas:', datosTarjetas);
-                            //console.error('🔍 [DEBUG] nombrePestaña:', nombrePestaña);
+                            //console.error('🔍 [DEBUG] codigoCuentaActual:', codigoCuentaActual);
+                            ////console.error('🔍 [DEBUG] datosTarjetas:', datosTarjetas);
+                            ////console.error('🔍 [DEBUG] nombrePestaña:', nombrePestaña);
 
                             // Ver registros omitidos del PASO 2 (fuente de TARJETAS)
-                            //console.error('📊 [TARJETAS RAW] Registros omitidos Paso 2:', window.registrosOmitidosPaso2);
-                           // console.error('📊 [TARJETAS RAW] Total registros:', window.registrosOmitidosPaso2?.length || 0);
+                            ////console.error('📊 [TARJETAS RAW] Registros omitidos Paso 2:', window.registrosOmitidosPaso2);
+                           // //console.error('📊 [TARJETAS RAW] Total registros:', window.registrosOmitidosPaso2?.length || 0);
 
                             //const datosTarjetas = this.generarDatosTarjetasDepositosBancosParte2(codigoCuentaActual, nombrePestaña);
                             const datosTarjetas= this.generarDatosTarjetas();
                             // Ver datos procesados de TARJETAS
-                            //console.error('📊 [TARJETAS PROCESADAS] Datos datosTarjetasXX:', datosTarjetasXX);
-                            //console.error('📊 [TARJETAS PROCESADAS] Total filas:', datosTarjetas?.length || 0);
+                            ////console.error('📊 [TARJETAS PROCESADAS] Datos datosTarjetasXX:', datosTarjetasXX);
+                            ////console.error('📊 [TARJETAS PROCESADAS] Total filas:', datosTarjetas?.length || 0);
                             
                             
                             if (datosTarjetas && datosTarjetas.length > 0) {
@@ -14049,7 +14049,7 @@
                                         !item[6]?.startsWith("MAYOR");                // FUENTE - distinta a MAYOR
                                 });
                                 
-                               // console.error('📊 [TARJETAS PROCESADAS] Datos completos 2:', depositosParte2);
+                               // //console.error('📊 [TARJETAS PROCESADAS] Datos completos 2:', depositosParte2);
                                 
                                 
                                 const totalParte2 = depositosParte2.reduce((sum, item) => sum + (parseFloat(item[4]) || 0), 0);
@@ -14067,9 +14067,9 @@
                                         fechaTarjetas = `01/${mes}/${año}`;
                                     }
                                     
-                                    //console.log('🔍 [DEBUG] mesAnoTarjetas:', this.mesAnoTarjetas);
-                                    //console.log('🔍 [DEBUG] fechaTarjetas formateada:', fechaTarjetas);
-                                    //console.error('🔍 [DEBUG] deposito:', deposito);
+                                    ////console.log('🔍 [DEBUG] mesAnoTarjetas:', this.mesAnoTarjetas);
+                                    ////console.log('🔍 [DEBUG] fechaTarjetas formateada:', fechaTarjetas);
+                                    ////console.error('🔍 [DEBUG] deposito:', deposito);
                                     const filaDeposito = [
                                         fechaTarjetas,                    // 1. Fecha
                                         deposito[3] || '',               // 2. Operación (GLOSA)
@@ -14083,15 +14083,15 @@
                                 console.warn('⚠️ No se pudieron generar datos TARJETAS para Parte 2');
                             }
                         } catch (error) {
-                            console.error('❌ Error generando datos TARJETAS para Parte 2:', error);
+                            //console.error('❌ Error generando datos TARJETAS para Parte 2:', error);
                         }
                         
                         
                         // PARTE 3: DEPOSITOS EN BANCOS DESDE SALDO
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 3 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Bancos - Parte 3 desde SALDO');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14113,13 +14113,13 @@
                                        estado === 'Pendiente';
                             });
                             
-                            console.log('🔍 [DEBUG] Depósitos Bancos Parte 3 encontrados:', depositosBancosParte3.length);
+                            //console.log('🔍 [DEBUG] Depósitos Bancos Parte 3 encontrados:', depositosBancosParte3.length);
                             
                             const totalParte3 = depositosBancosParte3.reduce((sum, item) => {
                                 return sum + (parseFloat(item['HABER']) || 0);
                             }, 0);
                             totalDepositosBancosConsolidado += totalParte3;
-                            console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
+                            //console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
                             
                             // Agregar detalles de Parte 3
                             depositosBancosParte3.forEach(deposito => {
@@ -14139,14 +14139,14 @@
                         
                         // Agregar título consolidado y todos los detalles
                         if (totalDepositosBancosConsolidado > 0 || todosDepositosBancosDetalles.length > 0) {
-                            console.log('🔍 [DEBUG] Total consolidado calculado:', totalDepositosBancosConsolidado);
+                            //console.log('🔍 [DEBUG] Total consolidado calculado:', totalDepositosBancosConsolidado);
                             
                             // Agregar línea en blanco para diferenciación visual
                             datosConciliacion.push(['']);
                             
                             // CORRECCIÓN DE SIGNO: Para conceptos (-), el total debe ser negativo
                             const totalConSignoCorrecto = -Math.abs(totalDepositosBancosConsolidado);
-                            console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
+                            //console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
                             
                             // Agregar título principal CONSOLIDADO CON TOTAL
                             datosConciliacion.push(['(-) DEPOSITOS EN BANCOS NO REGISTRADOS EN LIBROS', '', '', '', totalConSignoCorrecto]);
@@ -14162,16 +14162,16 @@
                         }
                         
                         // DEPOSITOS EN LIBROS NO REGISTRADOS EN BANCOS CONSOLIDADOS (PARTE 1 + PARTE 2 + PARTE 3 + PARTE 4)
-                        console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Depósitos en Libros No Registrados en Bancos');
+                        //console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Depósitos en Libros No Registrados en Bancos');
                         
                         let totalDepositosLibrosConsolidado = 0;
                         let todosDepositosLibrosDetalles = [];
                         
                         // PARTE 1: DEPOSITOS EN LIBROS DESDE SALDO
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 1 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 1 desde SALDO');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14190,11 +14190,11 @@
                                        item['DEBE'] > 0;
                             });
                             
-                            console.log('🔍 [DEBUG] Depósitos Parte 1 encontrados:', depositosParte1.length);
+                            //console.log('🔍 [DEBUG] Depósitos Parte 1 encontrados:', depositosParte1.length);
                             
                             const totalParte1 = depositosParte1.reduce((sum, item) => sum + (parseFloat(item['DEBE']) || 0), 0);
                             totalDepositosLibrosConsolidado += totalParte1;
-                            console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
+                            //console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
                             
                             // Agregar detalles de Parte 1
                             depositosParte1.forEach(deposito => {
@@ -14212,12 +14212,12 @@
                         }
                         
                         // PARTE 2: DEPOSITOS EN LIBROS DESDE TARJETAS
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 2 desde TARJETAS');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 2 desde TARJETAS');
                         
                         try {
                             const datosTarjetas = this.generarDatosTarjetas(codigoCuentaActual, nombrePestaña);
                             if (datosTarjetas && datosTarjetas.length > 0) {
-                                console.log('🔍 [DEBUG] Datos TARJETAS disponibles:', datosTarjetas.length, 'filas');
+                                //console.log('🔍 [DEBUG] Datos TARJETAS disponibles:', datosTarjetas.length, 'filas');
                                 
                                 // Filtrar depósitos Parte 2: Cuenta dinámica, FUENTE dinámico según moneda
                                 const esCuentaUSD = ['1041502', '1041402', '1041202', '1041302', '1041102'].includes(codigoCuentaActual);
@@ -14229,11 +14229,11 @@
                                            item[6] === fuenteMayor;              // FUENTE - dinámico según moneda
                                 });
                                 
-                                console.log(`🔍 [DEBUG] Depósitos Parte 2 encontrados: ${depositosParte2.length} (usando ${fuenteMayor} para cuenta ${codigoCuentaActual})`);
+                                //console.log(`🔍 [DEBUG] Depósitos Parte 2 encontrados: ${depositosParte2.length} (usando ${fuenteMayor} para cuenta ${codigoCuentaActual})`);
                                 
                                 const totalParte2 = depositosParte2.reduce((sum, item) => sum + (parseFloat(item[4]) || 0), 0);
                                 totalDepositosLibrosConsolidado += totalParte2;
-                                console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
+                                //console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
                                 
                                 // Agregar detalles de Parte 2
                                 depositosParte2.forEach(deposito => {
@@ -14258,11 +14258,11 @@
                                 console.warn('⚠️ No se pudieron generar datos TARJETAS para Parte 2');
                             }
                         } catch (error) {
-                            console.error('❌ Error generando datos TARJETAS para Parte 2:', error);
+                            //console.error('❌ Error generando datos TARJETAS para Parte 2:', error);
                         }
                         
                         // PARTE 3: DEPOSITOS EN LIBROS DESDE MAYOR (PEN o USD según cuenta)
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 3 desde MAYOR');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 3 desde MAYOR');
                         
                         // Determinar si es cuenta USD y qué datos usar para DEPOSITOS
                         const esCuentaUSDDepositos = ['1041502', '1041402', '1041202', '1041302', '1041102'].includes(codigoCuentaActual);
@@ -14270,7 +14270,7 @@
                         const nombreMayorParaUsarDepositos = esCuentaUSDDepositos ? 'MAYOR.USD' : 'MAYOR.PEN';
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON[datosMayorParaUsarDepositos] && Array.isArray(window.datosHojaTrabajoJSON[datosMayorParaUsarDepositos])) {
-                            console.log(`🔍 [DEBUG] Datos ${nombreMayorParaUsarDepositos} disponibles:`, window.datosHojaTrabajoJSON[datosMayorParaUsarDepositos].length, 'filas');
+                            //console.log(`🔍 [DEBUG] Datos ${nombreMayorParaUsarDepositos} disponibles:`, window.datosHojaTrabajoJSON[datosMayorParaUsarDepositos].length, 'filas');
                             
                             const datosMayor = window.datosHojaTrabajoJSON[datosMayorParaUsarDepositos];
                             
@@ -14282,11 +14282,11 @@
                                        item[12] > 0;                // DEBE (índice 12)
                             });
                             
-                            console.log(`🔍 [DEBUG] Depósitos Parte 3 encontrados: ${depositosParte3.length} (usando ${nombreMayorParaUsarDepositos} para cuenta ${codigoCuentaActual})`);
+                            //console.log(`🔍 [DEBUG] Depósitos Parte 3 encontrados: ${depositosParte3.length} (usando ${nombreMayorParaUsarDepositos} para cuenta ${codigoCuentaActual})`);
                             
                             const totalParte3 = depositosParte3.reduce((sum, item) => sum + (parseFloat(item[12]) || 0), 0);
                             totalDepositosLibrosConsolidado += totalParte3;
-                            console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
+                            //console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
                             
                             // Agregar detalles de Parte 3
                             depositosParte3.forEach(deposito => {
@@ -14303,11 +14303,11 @@
                     
                     // PARTE 4: DEPOSITOS EN LIBROS DESDE SALDO (Concepto específico) - SOLO PARA CUENTAS DISTINTAS A BCP/1041501
                     if (nombrePestaña !== 'BCP' && codigoCuentaActual !== '1041501') {
-                        console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 4 desde SALDO (excluye BCP/1041501)');
+                        //console.log('🔍 [DEBUG] Procesando Depósitos en Libros - Parte 4 desde SALDO (excluye BCP/1041501)');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles para Parte 4:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
-                            console.log("--------------------------------ROY:::" + codigoCuentaActual);
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles para Parte 4:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log("--------------------------------ROY:::" + codigoCuentaActual);
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
                             const datosMapeados = datosSaldo.slice(1).map(row => {
@@ -14328,13 +14328,13 @@
                                        estado === 'Pendiente';
                             });
                             
-                            console.log('🔍 [DEBUG] Depósitos Parte 4 encontrados:', depositosParte4.length);
+                            //console.log('🔍 [DEBUG] Depósitos Parte 4 encontrados:', depositosParte4.length);
                             
                             const totalParte4 = depositosParte4.reduce((sum, item) => {
                                 return sum + Math.abs(parseFloat(item['DEBE']) || 0);
                             }, 0);
                             totalDepositosLibrosConsolidado += totalParte4;
-                            console.log('🔍 [DEBUG] Total Parte 4 calculado:', totalParte4);
+                            //console.log('🔍 [DEBUG] Total Parte 4 calculado:', totalParte4);
                             
                             // Agregar detalles de Parte 4
                             depositosParte4.forEach(deposito => {
@@ -14351,12 +14351,12 @@
                             console.warn('⚠️ window.datosHojaTrabajoJSON.saldo no está disponible para Depósitos en Libros Parte 4');
                         }
                     } else {
-                        console.log('🔍 [DEBUG] Parte 4 omitida: Es BCP o cuenta 1041501');
+                        //console.log('🔍 [DEBUG] Parte 4 omitida: Es BCP o cuenta 1041501');
                     }
                     
                     // Agregar título consolidado y todos los detalles
                     if (totalDepositosLibrosConsolidado > 0 || todosDepositosLibrosDetalles.length > 0) {
-                            console.log('🔍 [DEBUG] Total consolidado calculado:', totalDepositosLibrosConsolidado);
+                            //console.log('🔍 [DEBUG] Total consolidado calculado:', totalDepositosLibrosConsolidado);
                             
                             // Agregar línea en blanco para diferenciación visual
                             datosConciliacion.push(['']);
@@ -14375,16 +14375,16 @@
                         }
                         
                         // CARGO EN BANCOS NO REGISTRADO EN LIBROS CONSOLIDADOS (PARTE 1 + PARTE 2 + PARTE 3)
-                        console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cargo en Bancos No Registrado en Libros');
+                        //console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cargo en Bancos No Registrado en Libros');
                         
                         let totalCargosBancosConsolidado = 0;
                         let todosCargosBancosDetalles = [];
                         
                         // PARTE 1: CARGO EN BANCOS DESDE EXTRACTOS
-                        console.log(`🔍 [DEBUG] Procesando Cargo en Bancos - Parte 1 desde ${nombrePestaña} Extract`);
+                        //console.log(`🔍 [DEBUG] Procesando Cargo en Bancos - Parte 1 desde ${nombrePestaña} Extract`);
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.extractos && window.datosHojaTrabajoJSON.extractos[codigoCuentaActual]) {
-                            console.log(`🔍 [DEBUG] Datos ${nombrePestaña} Extract disponibles para Cargo en Bancos:`, window.datosHojaTrabajoJSON.extractos[codigoCuentaActual].length, 'filas');
+                            //console.log(`🔍 [DEBUG] Datos ${nombrePestaña} Extract disponibles para Cargo en Bancos:`, window.datosHojaTrabajoJSON.extractos[codigoCuentaActual].length, 'filas');
                             
                             const datosExtracto = window.datosHojaTrabajoJSON.extractos[codigoCuentaActual];
                             
@@ -14403,7 +14403,7 @@
                                     h.toString().toUpperCase().includes('OPERACION') ||
                                     h.toString().toUpperCase().includes('VALOR')
                                 ));
-                                console.log('🔍 [DEBUG BBVA CARGO] Búsqueda alternativa de fecha:', fechaColBBVA);
+                                //console.log('🔍 [DEBUG BBVA CARGO] Búsqueda alternativa de fecha:', fechaColBBVA);
                             }
                             
                             // Usar la columna de fecha correcta
@@ -14414,9 +14414,9 @@
                             const abonoCol = headers.findIndex(h => h && h.toString().toUpperCase().includes('ABONO'));
                             const esIBK = (cargoCol !== -1 && abonoCol !== -1 && montoCol === -1);
                             
-                            console.log('🔍 [DEBUG] Columnas encontradas - ESTADO:', estadoCol, 'MONTO/IMPORTE:', montoCol, 'FECHA:', fechaCol, 'FECHA_FINAL:', fechaColFinal);
+                            //console.log('🔍 [DEBUG] Columnas encontradas - ESTADO:', estadoCol, 'MONTO/IMPORTE:', montoCol, 'FECHA:', fechaCol, 'FECHA_FINAL:', fechaColFinal);
                             if (esIBK) {
-                                console.log('🔍 [DEBUG] Detectado IBK - CARGO:', cargoCol, 'ABONO:', abonoCol);
+                                //console.log('🔍 [DEBUG] Detectado IBK - CARGO:', cargoCol, 'ABONO:', abonoCol);
                             }
                             
                             if (estadoCol !== -1 && (montoCol !== -1 || esIBK)) {
@@ -14435,14 +14435,14 @@
                                     }
                                 });
                                 
-                                console.log('🔍 [DEBUG] Cargos Bancos Parte 1 encontrados:', cargosBancosParte1.length);
+                                //console.log('🔍 [DEBUG] Cargos Bancos Parte 1 encontrados:', cargosBancosParte1.length);
                                 
                                 const totalParte1 = cargosBancosParte1.reduce((sum, item) => {
                                     const monto = esIBK ? (parseFloat(item[cargoCol]) || 0) : (parseFloat(item[montoCol]) || 0);
                                     return sum + Math.abs(monto);
                                 }, 0);
                                 totalCargosBancosConsolidado += totalParte1;
-                                console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
+                                //console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
                                 
                                 // Agregar detalles de Parte 1
                                 cargosBancosParte1.forEach(cargo => {
@@ -14482,10 +14482,10 @@
                         }
                         
                         // PARTE 2: CARGO EN BANCOS DESDE SALDO
-                        console.log('🔍 [DEBUG] Procesando Cargo en Bancos - Parte 2 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Bancos - Parte 2 desde SALDO');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14498,12 +14498,12 @@
                             });
 
                             // DEBUG: Mostrar algunos registros para diagnóstico
-                            console.log('🔍 [DEBUG PARTE 2] Total registros en datosMapeados:', datosMapeados.length);
-                            console.log('🔍 [DEBUG PARTE 2] codigoCuentaActual:', codigoCuentaActual);
+                            //console.log('🔍 [DEBUG PARTE 2] Total registros en datosMapeados:', datosMapeados.length);
+                            //console.log('🔍 [DEBUG PARTE 2] codigoCuentaActual:', codigoCuentaActual);
                             
                             // Mostrar los primeros 3 registros para ver la estructura
                             datosMapeados.slice(0, 3).forEach((item, index) => {
-                                console.log(`🔍 [DEBUG PARTE 2] Registro ${index + 1}:`, {
+                                //console.log(`🔍 [DEBUG PARTE 2] Registro ${index + 1}:`, {
                                     cuenta: item['CUENTA'],
                                     concepto: item['Concepto Reporte Final'],
                                     estado: item['ESTADO'],
@@ -14518,7 +14518,7 @@
                                 
                                 // DEBUG: Log detallado para cada registro que coincida parcialmente
                                 if (cuenta.toString() === codigoCuentaActual) {
-                                    console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
+                                    //console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
                                         cuenta: cuenta,
                                         concepto: concepto,
                                         estado: estado,
@@ -14545,7 +14545,7 @@
 
                             // DEBUG: Log detallado para cada registro con cuenta coincidente
                             if (cuenta === codigoCuentaActual.toString()) {
-                                console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
+                                //console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
                                     cuenta: cuenta,
                                     conceptoOriginal: item['Concepto Reporte Final'],
                                     conceptoNormalizado: concepto,
@@ -14561,13 +14561,13 @@
                         });
 
                             
-                            console.log('🔍 [DEBUG] Cargos Bancos Parte 2 encontrados:', cargosBancosParte2.length);
+                            //console.log('🔍 [DEBUG] Cargos Bancos Parte 2 encontrados:', cargosBancosParte2.length);
                             
                             const totalParte2 = cargosBancosParte2.reduce((sum, item) => {
                                 return sum + Math.abs(parseFloat(item['DEBE']) || 0);
                             }, 0);
                             totalCargosBancosConsolidado += totalParte2;
-                            console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
+                            //console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
                             
                             // Agregar detalles de Parte 2
                             cargosBancosParte2.forEach(cargo => {
@@ -14586,20 +14586,20 @@
                         
                         /*
                         // PARTE 3 ELIMINADA - Duplicaba la Parte 2
-                        console.log('🔍 [DEBUG] Procesando Cargo en Bancos - Parte 3 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Bancos - Parte 3 desde SALDO');
                         
                         // LOG ESPECÍFICO PARA CUENTA 1041301 (SBP)
                         if (codigoCuentaActual === '1041301') {
-                            console.log('🔍 [DEBUG SBP 1041301] Iniciando Parte 3 para cuenta SBP');
-                            console.log('🔍 [DEBUG SBP 1041301] window.datosHojaTrabajoJSON.saldo disponible:', !!window.datosHojaTrabajoJSON?.saldo);
-                            console.log('🔍 [DEBUG SBP 1041301] Array.isArray:', Array.isArray(window.datosHojaTrabajoJSON?.saldo));
+                            //console.log('🔍 [DEBUG SBP 1041301] Iniciando Parte 3 para cuenta SBP');
+                            //console.log('🔍 [DEBUG SBP 1041301] window.datosHojaTrabajoJSON.saldo disponible:', !!window.datosHojaTrabajoJSON?.saldo);
+                            //console.log('🔍 [DEBUG SBP 1041301] Array.isArray:', Array.isArray(window.datosHojaTrabajoJSON?.saldo));
                             if (window.datosHojaTrabajoJSON?.saldo) {
-                                console.log('🔍 [DEBUG SBP 1041301] Total filas en saldo:', window.datosHojaTrabajoJSON.saldo.length);
+                                //console.log('🔍 [DEBUG SBP 1041301] Total filas en saldo:', window.datosHojaTrabajoJSON.saldo.length);
                             }
                         }
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14617,9 +14617,9 @@
                                     const cuenta = item['CUENTA'] || '';
                                     return cuenta === '1041301';
                                 });
-                                console.log('🔍 [DEBUG SBP 1041301] TODOS los registros para cuenta 1041301:', todosRegistrosSBP.length);
+                                //console.log('🔍 [DEBUG SBP 1041301] TODOS los registros para cuenta 1041301:', todosRegistrosSBP.length);
                                 todosRegistrosSBP.forEach((item, index) => {
-                                    console.log(`🔍 [DEBUG SBP 1041301] Registro ${index + 1}:`, {
+                                    //console.log(`🔍 [DEBUG SBP 1041301] Registro ${index + 1}:`, {
                                         concepto: item['Concepto Reporte Final'],
                                         estado: item['ESTADO'],
                                         importe: item['Importe'],
@@ -14636,9 +14636,9 @@
                                 return cuenta.toString() === codigoCuentaActual && concepto.includes('CARGO EN BANCOS');
                             });
                             
-                            console.log(`🔍 [DEBUG PARTE 3] Registros con concepto CARGO EN BANCOS para cuenta ${codigoCuentaActual}:`, registrosConCargoBancos.length);
+                            //console.log(`🔍 [DEBUG PARTE 3] Registros con concepto CARGO EN BANCOS para cuenta ${codigoCuentaActual}:`, registrosConCargoBancos.length);
                             registrosConCargoBancos.forEach((item, index) => {
-                                console.log(`🔍 [DEBUG PARTE 3] Registro ${index + 1}:`, {
+                                //console.log(`🔍 [DEBUG PARTE 3] Registro ${index + 1}:`, {
                                     concepto: item['Concepto Reporte Final'],
                                     estado: item['ESTADO'],
                                     importe: item['Importe'],
@@ -14654,7 +14654,7 @@
                                 // LOG ESPECÍFICO PARA CUENTA 1041301 (SBP)
                                 if (codigoCuentaActual === '1041301') {
                                     if (cuenta === '1041301') {
-                                        console.log('🔍 [DEBUG SBP 1041301] Registro encontrado para SBP:', {
+                                        //console.log('🔍 [DEBUG SBP 1041301] Registro encontrado para SBP:', {
                                             concepto: concepto,
                                             estado: estado,
                                             importe: item['Importe'],
@@ -14673,7 +14673,7 @@
                                 
                                 // DEBUG: Log detallado para identificar el problema
                                 if (cuenta.toString() === codigoCuentaActual && concepto.includes('CARGO EN BANCOS')) {
-                                    console.log('🔍 [DEBUG PARTE 3] Registro encontrado:', {
+                                    //console.log('🔍 [DEBUG PARTE 3] Registro encontrado:', {
                                         cuenta: cuenta,
                                         concepto: concepto,
                                         estado: estado,
@@ -14690,15 +14690,15 @@
                                        estado === 'Pendiente';
                             });
                             
-                            console.log('🔍 [DEBUG] Cargos Bancos Parte 3 encontrados:', cargosBancosParte3.length);
+                            //console.log('🔍 [DEBUG] Cargos Bancos Parte 3 encontrados:', cargosBancosParte3.length);
                             
                             // LOG ESPECÍFICO PARA CUENTA 1041301 (SBP)
                             if (codigoCuentaActual === '1041301') {
-                                console.log('🔍 [DEBUG SBP 1041301] Cargos Bancos Parte 3 encontrados para SBP:', cargosBancosParte3.length);
+                                //console.log('🔍 [DEBUG SBP 1041301] Cargos Bancos Parte 3 encontrados para SBP:', cargosBancosParte3.length);
                                 if (cargosBancosParte3.length > 0) {
-                                    console.log('🔍 [DEBUG SBP 1041301] Detalles de los registros encontrados:', cargosBancosParte3);
+                                    //console.log('🔍 [DEBUG SBP 1041301] Detalles de los registros encontrados:', cargosBancosParte3);
                                 } else {
-                                    console.log('🔍 [DEBUG SBP 1041301] NO se encontraron registros para SBP Parte 3');
+                                    //console.log('🔍 [DEBUG SBP 1041301] NO se encontraron registros para SBP Parte 3');
                                 }
                             }
                             
@@ -14706,11 +14706,11 @@
                                 return sum + Math.abs(parseFloat(item['DEBE']) || 0);
                             }, 0);
                             totalCargosBancosConsolidado += totalParte3;
-                            console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
+                            //console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
                             
                             // LOG ESPECÍFICO PARA CUENTA 1041301 (SBP)
                             if (codigoCuentaActual === '1041301') {
-                                console.log('🔍 [DEBUG SBP 1041301] Total Parte 3 calculado para SBP:', totalParte3);
+                                //console.log('🔍 [DEBUG SBP 1041301] Total Parte 3 calculado para SBP:', totalParte3);
                             }
                             
                             // Agregar detalles de Parte 3
@@ -14731,14 +14731,14 @@
                         
                         // Agregar título consolidado y todos los detalles
                         if (totalCargosBancosConsolidado > 0 || todosCargosBancosDetalles.length > 0) {
-                            console.log('🔍 [DEBUG] Total consolidado calculado:', totalCargosBancosConsolidado);
+                            //console.log('🔍 [DEBUG] Total consolidado calculado:', totalCargosBancosConsolidado);
                             
                             // Agregar línea en blanco para diferenciación visual
                             datosConciliacion.push(['']);
                             
                             // CORRECCIÓN DE SIGNO: Para CARGO EN BANCOS NO REGISTRADO EN LIBROS, el total debe ser positivo
                             const totalConSignoCorrecto = Math.abs(totalCargosBancosConsolidado);
-                            console.log('🔍 [DEBUG] Total con signo corregido (positivo para CARGO EN BANCOS):', totalConSignoCorrecto);
+                            //console.log('🔍 [DEBUG] Total con signo corregido (positivo para CARGO EN BANCOS):', totalConSignoCorrecto);
                             
                             // Agregar título principal CONSOLIDADO CON TOTAL
                             datosConciliacion.push(['(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS', '', '', '', totalConSignoCorrecto]);
@@ -14754,16 +14754,16 @@
                         }
                         
                         // CARGO EN LIBROS NO REGISTRADO EN BANCOS CONSOLIDADOS (PARTE 1 + PARTE 2 + PARTE 3)
-                        console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cargo en Libros No Registrado en Bancos');
+                        //console.log('🔍 [DEBUG] Iniciando cálculo consolidado de Cargo en Libros No Registrado en Bancos');
                         
                         let totalCargosLibrosConsolidado = 0;
                         let todosCargosLibrosDetalles = [];
                         
                         // PARTE 1: CARGO EN LIBROS DESDE SALDO
-                        console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 1 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 1 desde SALDO');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14782,11 +14782,11 @@
                                        item['HABER'] > 0;
                             });
                             
-                            console.log('🔍 [DEBUG] Cargos Libros Parte 1 encontrados:', cargosLibrosParte1.length);
+                            //console.log('🔍 [DEBUG] Cargos Libros Parte 1 encontrados:', cargosLibrosParte1.length);
                             
                             const totalParte1 = cargosLibrosParte1.reduce((sum, item) => sum + (parseFloat(item['HABER']) || 0), 0);
                             totalCargosLibrosConsolidado += totalParte1;
-                            console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
+                            //console.log('🔍 [DEBUG] Total Parte 1 calculado:', totalParte1);
                             
                             // Agregar detalles de Parte 1
                             cargosLibrosParte1.forEach(cargo => {
@@ -14804,7 +14804,7 @@
                         }
                         
                         // PARTE 2: CARGO EN LIBROS DESDE MAYOR (PEN o USD según cuenta)
-                        console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 2 desde MAYOR');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 2 desde MAYOR');
                         
                         // Determinar si es cuenta USD y qué datos usar para CARGOS
                         const esCuentaUSDCargos = ['1041502', '1041402', '1041202', '1041302', '1041102'].includes(codigoCuentaActual);
@@ -14812,7 +14812,7 @@
                         const nombreMayorParaUsarCargos = esCuentaUSDCargos ? 'MAYOR.USD' : 'MAYOR.PEN';
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON[datosMayorParaUsarCargos] && Array.isArray(window.datosHojaTrabajoJSON[datosMayorParaUsarCargos])) {
-                            console.log(`🔍 [DEBUG] Datos ${nombreMayorParaUsarCargos} disponibles:`, window.datosHojaTrabajoJSON[datosMayorParaUsarCargos].length, 'filas');
+                            //console.log(`🔍 [DEBUG] Datos ${nombreMayorParaUsarCargos} disponibles:`, window.datosHojaTrabajoJSON[datosMayorParaUsarCargos].length, 'filas');
                             
                             const datosMayor = window.datosHojaTrabajoJSON[datosMayorParaUsarCargos];
                             
@@ -14826,11 +14826,11 @@
                                        libro !== '02';               // Excluir LIBRO 02
                             });
                             
-                            console.log(`🔍 [DEBUG] Cargos Libros Parte 2 encontrados: ${cargosLibrosParte2.length} (usando ${nombreMayorParaUsarCargos} para cuenta ${codigoCuentaActual})`);
+                            //console.log(`🔍 [DEBUG] Cargos Libros Parte 2 encontrados: ${cargosLibrosParte2.length} (usando ${nombreMayorParaUsarCargos} para cuenta ${codigoCuentaActual})`);
                             
                             const totalParte2 = cargosLibrosParte2.reduce((sum, item) => sum + (parseFloat(item[13]) || 0), 0);
                             totalCargosLibrosConsolidado += totalParte2;
-                            console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
+                            //console.log('🔍 [DEBUG] Total Parte 2 calculado:', totalParte2);
                             
                             // Agregar detalles de Parte 2
                             cargosLibrosParte2.forEach(cargo => {
@@ -14848,10 +14848,10 @@
                         }
                         
                         // PARTE 3: CARGO EN LIBROS DESDE SALDO
-                        console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 3 desde SALDO');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 3 desde SALDO');
                         
                         if (window.datosHojaTrabajoJSON && window.datosHojaTrabajoJSON.saldo && Array.isArray(window.datosHojaTrabajoJSON.saldo)) {
-                            console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                            //console.log('🔍 [DEBUG] Datos SALDO disponibles:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
                             
                             const datosSaldo = window.datosHojaTrabajoJSON.saldo;
                             const headers = datosSaldo[0];
@@ -14873,13 +14873,13 @@
                                        estado === 'Pendiente';
                             });
                             
-                            console.log('🔍 [DEBUG] Cargos Libros Parte 3 encontrados:', cargosLibrosParte3.length);
+                            //console.log('🔍 [DEBUG] Cargos Libros Parte 3 encontrados:', cargosLibrosParte3.length);
                             
                             const totalParte3 = cargosLibrosParte3.reduce((sum, item) => {
                                 return sum + (parseFloat(item['HABER']) || 0);
                             }, 0);
                             totalCargosLibrosConsolidado += totalParte3;
-                            console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
+                            //console.log('🔍 [DEBUG] Total Parte 3 calculado:', totalParte3);
                             
                             // Agregar detalles de Parte 3
                             cargosLibrosParte3.forEach(cargo => {
@@ -14898,12 +14898,12 @@
                         
                         /*Cambio solicitado: Agregar PARTE 4 desde TARJETAS con filtros CUENTA, FUENTE y HABER>0 - 27102025*/
                         // PARTE 4: CARGO EN LIBROS DESDE TARJETAS
-                        console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 4 desde TARJETAS');
+                        //console.log('🔍 [DEBUG] Procesando Cargo en Libros - Parte 4 desde TARJETAS');
                         
                         try {
                             const datosTarjetas = this.generarDatosTarjetas(codigoCuentaActual, nombrePestaña);
                             if (datosTarjetas && datosTarjetas.length > 0) {
-                                console.log('🔍 [DEBUG] Datos TARJETAS disponibles para Cargos Parte 4:', datosTarjetas.length, 'filas');
+                                //console.log('🔍 [DEBUG] Datos TARJETAS disponibles para Cargos Parte 4:', datosTarjetas.length, 'filas');
                                 
                                 // Filtrar cargos Parte 4: Cuenta dinámica, FUENTE dinámico según moneda, HABER>0
                                 /*Cambio solicitado: OBSERVACIÓN 2 - Filtrar por FUENTE MAYOR.PEN o MAYOR.USD según la cuenta - 27102025 19:45*/
@@ -14917,11 +14917,11 @@
                                            parseFloat(item[5]) > 0;              // HABER (índice 5) > 0
                                 });
                                 
-                                console.log(`🔍 [DEBUG] Cargos Libros Parte 4 encontrados: ${cargosParte4.length} (usando ${fuenteMayor} para cuenta ${codigoCuentaActual})`);
+                                //console.log(`🔍 [DEBUG] Cargos Libros Parte 4 encontrados: ${cargosParte4.length} (usando ${fuenteMayor} para cuenta ${codigoCuentaActual})`);
                                 
                                 const totalParte4 = cargosParte4.reduce((sum, item) => sum + (parseFloat(item[5]) || 0), 0);
                                 totalCargosLibrosConsolidado += totalParte4;
-                                console.log('🔍 [DEBUG] Total Parte 4 calculado:', totalParte4);
+                                //console.log('🔍 [DEBUG] Total Parte 4 calculado:', totalParte4);
                                 
                                 // Agregar detalles de Parte 4
                                 cargosParte4.forEach(cargo => {
@@ -14946,19 +14946,19 @@
                                 console.warn('⚠️ No se pudieron generar datos TARJETAS para Cargos Parte 4');
                             }
                         } catch (error) {
-                            console.error('❌ Error generando datos TARJETAS para Cargos Parte 4:', error);
+                            //console.error('❌ Error generando datos TARJETAS para Cargos Parte 4:', error);
                         }
                         
                         // Agregar título consolidado y todos los detalles
                         if (totalCargosLibrosConsolidado > 0 || todosCargosLibrosDetalles.length > 0) {
-                            console.log('🔍 [DEBUG] Total consolidado calculado:', totalCargosLibrosConsolidado);
+                            //console.log('🔍 [DEBUG] Total consolidado calculado:', totalCargosLibrosConsolidado);
                             
                             // Agregar línea en blanco para diferenciación visual
                             datosConciliacion.push(['']);
                             
                             // CORRECCIÓN DE SIGNO: Para conceptos (-), el total debe ser negativo
                             const totalConSignoCorrecto = -Math.abs(totalCargosLibrosConsolidado);
-                            console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
+                            //console.log('🔍 [DEBUG] Total con signo corregido:', totalConSignoCorrecto);
                             
                             // Agregar título principal CONSOLIDADO CON TOTAL
                             datosConciliacion.push(['(-) CARGO EN LIBROS NO REGISTRADO EN BANCOS', '', '', '', totalConSignoCorrecto]);
@@ -14973,7 +14973,7 @@
                             datosConciliacion.push(['(-) CARGO EN LIBROS NO REGISTRADO EN BANCOS', '', '', '', 0]);
                         }
                         
-                        console.log('🔍 [CAMPOS] Procesando campos finales para', nombrePestaña, '- saldoLibros:', saldoLibros);
+                        //console.log('🔍 [CAMPOS] Procesando campos finales para', nombrePestaña, '- saldoLibros:', saldoLibros);
                         
                         // Calcular TOTAL sumando todos los conceptos principales
                         let totalConciliacion = 0;
@@ -15000,16 +15000,16 @@
                         });
                         
                         // Log detallado de todos los conceptos sumados
-                        console.log('🔍 [TOTAL CONCILIACIÓN] Conceptos sumados para', nombrePestaña, ':');
+                        //console.log('🔍 [TOTAL CONCILIACIÓN] Conceptos sumados para', nombrePestaña, ':');
                         conceptosSumados.forEach(item => {
-                            console.log(`  - ${item.concepto}: ${item.valor}`);
+                            //console.log(`  - ${item.concepto}: ${item.valor}`);
                         });
-                        console.log('🔍 [TOTAL CONCILIACIÓN] Subtotal conceptos:', totalConciliacion);
+                        //console.log('🔍 [TOTAL CONCILIACIÓN] Subtotal conceptos:', totalConciliacion);
                         
                         // Agregar SALDO EN LIBROS al total (siempre se suma al final)
                         totalConciliacion += saldoLibros;
-                        console.log('🔍 [TOTAL CONCILIACIÓN] Saldo en libros agregado:', saldoLibros);
-                        console.log('🔍 [TOTAL CONCILIACIÓN] Total final calculado:', totalConciliacion);
+                        //console.log('🔍 [TOTAL CONCILIACIÓN] Saldo en libros agregado:', saldoLibros);
+                        //console.log('🔍 [TOTAL CONCILIACIÓN] Total final calculado:', totalConciliacion);
                         
                         // Agregar campos finales: SALDO EN LIBROS
                         
@@ -15022,11 +15022,11 @@
                             ['']
                         );
                         
-                        console.log('🔍 [CAMPOS] ✅ Campos agregados - SALDO EN LIBROS:', totalConciliacion - saldoLibros);
+                        //console.log('🔍 [CAMPOS] ✅ Campos agregados - SALDO EN LIBROS:', totalConciliacion - saldoLibros);
                         
                         // Verificar específicamente que SALDO EN BANCOS se agregó
                         const ultimasFilas = datosConciliacion.slice(-5);
-                        console.log('🔍 [CAMPOS] Últimas 5 filas para verificar SALDO EN BANCOS:', ultimasFilas);
+                        //console.log('🔍 [CAMPOS] Últimas 5 filas para verificar SALDO EN BANCOS:', ultimasFilas);
 
 
                         // No agregar campos de diferencia ni estado
@@ -15106,8 +15106,8 @@
                             const celdaSaldoLibros = `E${filaSaldoLibros}`;
                             wsConciliacion[celdaSaldoLibros] = { f: formulaSum };
                             
-                            console.log('🔍 [FÓRMULA] ✅ Fórmula completa agregada para SALDO EN LIBROS:', formulaSum);
-                            console.log('🔍 [FÓRMULA] Celdas encontradas dinámicamente:', {
+                            //console.log('🔍 [FÓRMULA] ✅ Fórmula completa agregada para SALDO EN LIBROS:', formulaSum);
+                            //console.log('🔍 [FÓRMULA] Celdas encontradas dinámicamente:', {
                                 saldoBancos: `E${filaSaldoBancos}`,
                                 chequesNoCobrados: filaChequesNoCobrados > 0 ? `E${filaChequesNoCobrados}` : 'No encontrado',
                                 depositosBancos: filaDepositosBancos > 0 ? `E${filaDepositosBancos}` : 'No encontrado',
@@ -15118,10 +15118,10 @@
                             });
                             
                             // Log adicional para verificar que la fórmula es realmente dinámica
-                            console.log('🔍 [FÓRMULA] 📊 Total de filas en datosConciliacion:', datosConciliacion.length);
-                            console.log('🔍 [FÓRMULA] 🔄 La fórmula incluye TODOS los campos de conciliación');
+                            //console.log('🔍 [FÓRMULA] 📊 Total de filas en datosConciliacion:', datosConciliacion.length);
+                            //console.log('🔍 [FÓRMULA] 🔄 La fórmula incluye TODOS los campos de conciliación');
                         } else {
-                            console.log('🔍 [FÓRMULA] ⚠️ No se pudo crear la fórmula - filas no encontradas:', {
+                            //console.log('🔍 [FÓRMULA] ⚠️ No se pudo crear la fórmula - filas no encontradas:', {
                                 filaSaldoBancos,
                                 filaSaldoLibros
                             });
@@ -15136,8 +15136,8 @@
                         XLSX.utils.book_append_sheet(wb, wsConciliacion, nombrePestaña);
                         
                         } catch (error) {
-                            console.error('❌ [ERROR] Error en conciliación para', nombrePestaña, ':', error);
-                            console.error('❌ [ERROR] Stack trace:', error.stack);
+                            //console.error('❌ [ERROR] Error en conciliación para', nombrePestaña, ':', error);
+                            //console.error('❌ [ERROR] Stack trace:', error.stack);
                             
                             // Agregar pestaña básica en caso de error
                             const datosBasicos = [
@@ -15161,7 +15161,7 @@
             // Función para configurar agrupación de filas para todas las secciones con detalles
             configurarAgrupacionCheques(worksheet, datosConciliacion) {
                 try {
-                    console.log('🔧 [GROUPING] Configurando agrupación para todas las secciones...');
+                    //console.log('🔧 [GROUPING] Configurando agrupación para todas las secciones...');
                     
                     // Lista de títulos que pueden tener agrupación
                const titulosConAgrupacion = [
@@ -15184,10 +15184,10 @@
                     titulosConAgrupacion.forEach(titulo => {
                         const resultado = this.buscarSeccionConDetalles(datosConciliacion, titulo);
                         
-                        console.log(`🔍 [GROUPING] Analizando título: ${titulo}`, resultado);
+                        //console.log(`🔍 [GROUPING] Analizando título: ${titulo}`, resultado);
                         
                         if (resultado.tieneDetalles) {
-                            console.log(`🔧 [GROUPING] Configurando agrupación para: ${titulo}`, {
+                            //console.log(`🔧 [GROUPING] Configurando agrupación para: ${titulo}`, {
                                 titulo: resultado.filaTitulo,
                                 inicio: resultado.filaInicioDetalles,
                                 fin: resultado.filaFinDetalles,
@@ -15221,7 +15221,7 @@
                         collapsed: true
                     });
                         } else {
-                            console.log(`ℹ️ [GROUPING] ${titulo} no tiene detalles, omitiendo agrupación`);
+                            //console.log(`ℹ️ [GROUPING] ${titulo} no tiene detalles, omitiendo agrupación`);
                         }
                     });
                     
@@ -15234,15 +15234,15 @@
                         applyStyles: true   // Aplicar estilos de agrupación
                     };
                     
-                    console.log('✅ [GROUPING] Agrupación configurada exitosamente para todas las secciones');
+                    //console.log('✅ [GROUPING] Agrupación configurada exitosamente para todas las secciones');
                     
                 } catch (error) {
-                    console.error('❌ [GROUPING] Error configurando agrupación:', error);
+                    //console.error('❌ [GROUPING] Error configurando agrupación:', error);
                 }
             },
 
             configurarCombinacionCeldasTitulos(worksheet, datosConciliacion) {
-                console.log('🔧 [MERGE] Iniciando configuración de combinación de celdas para títulos');
+                //console.log('🔧 [MERGE] Iniciando configuración de combinación de celdas para títulos');
                 
                 // Lista de títulos que necesitan combinación de celdas
                 const titulosConCombinacion = [
@@ -15268,7 +15268,7 @@
                     );
                     
                     if (filaTitulo !== -1) {
-                        console.log(`🔧 [MERGE] Combinando celdas para título: ${titulo} en fila ${filaTitulo}`);
+                        //console.log(`🔧 [MERGE] Combinando celdas para título: ${titulo} en fila ${filaTitulo}`);
                         
                         // Combinar celdas A hasta D (columnas 0-3) para el título
                         const mergeRange = {
@@ -15277,13 +15277,13 @@
                         };
                         
                         worksheet['!merges'].push(mergeRange);
-                        console.log(`✅ [MERGE] Combinación configurada: A${filaTitulo + 1}:D${filaTitulo + 1}`);
+                        //console.log(`✅ [MERGE] Combinación configurada: A${filaTitulo + 1}:D${filaTitulo + 1}`);
                     } else {
                         console.warn(`⚠️ [MERGE] No se encontró el título: ${titulo}`);
                     }
                 });
                 
-                console.log(`🔧 [MERGE] Total de combinaciones configuradas: ${worksheet['!merges'].length}`);
+                //console.log(`🔧 [MERGE] Total de combinaciones configuradas: ${worksheet['!merges'].length}`);
             },
 
             // Función auxiliar para buscar una sección con detalles
@@ -15305,7 +15305,7 @@
                    'TOTAL'
                ];
                 
-                console.log(`🔍 [GROUPING DEBUG] Buscando título: "${titulo}"`);
+                //console.log(`🔍 [GROUPING DEBUG] Buscando título: "${titulo}"`);
                 
                 // Buscar la fila del título
                 for (let i = 0; i < datosConciliacion.length; i++) {
@@ -15313,13 +15313,13 @@
                     if (Array.isArray(fila) && fila[0] === titulo) {
                         filaTitulo = i;
                         filaInicioDetalles = i + 1;
-                        console.log(`🔍 [GROUPING DEBUG] Título encontrado en fila ${i}`);
+                        //console.log(`🔍 [GROUPING DEBUG] Título encontrado en fila ${i}`);
                         break;
                     }
                 }
                 
                 if (filaTitulo === -1) {
-                    console.log(`🔍 [GROUPING DEBUG] Título "${titulo}" NO encontrado`);
+                    //console.log(`🔍 [GROUPING DEBUG] Título "${titulo}" NO encontrado`);
                     return { tieneDetalles: false };
                 }
                 
@@ -15330,14 +15330,14 @@
                         // Si contiene otro título, es el final
                         if (titulosConAgrupacion.includes(fila[0])) {
                             filaFinDetalles = i - 1;
-                            console.log(`🔍 [GROUPING DEBUG] Final de detalles encontrado en fila ${i-1} (otro título)`);
+                            //console.log(`🔍 [GROUPING DEBUG] Final de detalles encontrado en fila ${i-1} (otro título)`);
                             break;
                         }
                         
                         // Si es una fila completamente vacía, es el final
                         if (fila.length === 0 || (fila[0] === '' && fila[1] === '' && fila[2] === '' && fila[3] === '')) {
                             filaFinDetalles = i - 1;
-                            console.log(`🔍 [GROUPING DEBUG] Final de detalles encontrado en fila ${i-1} (fila vacía)`);
+                            //console.log(`🔍 [GROUPING DEBUG] Final de detalles encontrado en fila ${i-1} (fila vacía)`);
                             break;
                         }
                     }
@@ -15352,7 +15352,7 @@
                 const totalDetalles = filaFinDetalles - filaInicioDetalles + 1;
                 tieneDetalles = totalDetalles > 0;
                 
-                console.log(`🔍 [GROUPING DEBUG] Resultado final para "${titulo}":`, {
+                //console.log(`🔍 [GROUPING DEBUG] Resultado final para "${titulo}":`, {
                     filaTitulo,
                     filaInicioDetalles,
                     filaFinDetalles,
@@ -15362,7 +15362,7 @@
                 
                 // Debug adicional para títulos "(-)"
                 if (titulo.startsWith('(-)')) {
-                    console.log(`🔍 [GROUPING DEBUG] Título "(-)": ${titulo}`, {
+                    //console.log(`🔍 [GROUPING DEBUG] Título "(-)": ${titulo}`, {
                         filaTitulo,
                         filaInicioDetalles,
                         filaFinDetalles,
@@ -15375,10 +15375,10 @@
                     
                     // Debug específico para fechas vacías
                     if (tieneDetalles) {
-                        console.log(`🔍 [DATE DEBUG] Verificando fechas para ${titulo}:`);
+                        //console.log(`🔍 [DATE DEBUG] Verificando fechas para ${titulo}:`);
                         for (let i = filaInicioDetalles; i <= Math.min(filaFinDetalles, filaInicioDetalles + 3); i++) {
                             const fila = datosConciliacion[i];
-                            console.log(`  Fila ${i}:`, {
+                            //console.log(`  Fila ${i}:`, {
                                 fecha: fila[0],
                                 concepto: fila[1],
                                 ref: fila[2],
@@ -15414,7 +15414,7 @@
                         }
                     };
                     
-                    console.log('📊 [JSON] Inicializando almacenamiento de datos de hoja de trabajo');
+                    //console.log('📊 [JSON] Inicializando almacenamiento de datos de hoja de trabajo');
                     
                     // Crear workbook para resultados de conciliación
                     const wb = XLSX.utils.book_new();
@@ -15453,7 +15453,7 @@
                          
                          // Almacenar datos MAYOR.PEN en JSON
                          window.datosHojaTrabajoJSON.mayor = datosMayorCompletos;
-                         console.log('📊 [JSON] Almacenados datos MAYOR.PEN:', datosMayorCompletos.length, 'filas');
+                         //console.log('📊 [JSON] Almacenados datos MAYOR.PEN:', datosMayorCompletos.length, 'filas');
                          
                         const wsMayor = XLSX.utils.aoa_to_sheet(datosMayorCompletos);
                         
@@ -15467,7 +15467,7 @@
                      if (datosCompletos.datosMayorUSD && datosCompletos.datosMayorUSD.length > 0) {
                          // Almacenar datos MAYOR.USD en JSON
                          window.datosHojaTrabajoJSON.mayorUSD = datosCompletos.datosMayorUSD;
-                         console.log('📊 [JSON] Almacenados datos MAYOR.USD:', datosCompletos.datosMayorUSD.length, 'filas');
+                         //console.log('📊 [JSON] Almacenados datos MAYOR.USD:', datosCompletos.datosMayorUSD.length, 'filas');
                          
                          const wsMayorUSD = XLSX.utils.aoa_to_sheet(datosCompletos.datosMayorUSD);
                          
@@ -15486,16 +15486,16 @@
                                  let datosParaExcel = extractoInfo.datosExtracto;
                                  
                                  if (codigoCuenta === '1041501') {
-                                     console.log(`🔍 [FILTER] Aplicando filtro de exclusión a BCP.01 (${codigoCuenta})`);
-                                     console.log(`🔍 [FILTER] Datos originales BCP.01:`, extractoInfo.datosExtracto.length, 'registros');
+                                     //console.log(`🔍 [FILTER] Aplicando filtro de exclusión a BCP.01 (${codigoCuenta})`);
+                                     //console.log(`🔍 [FILTER] Datos originales BCP.01:`, extractoInfo.datosExtracto.length, 'registros');
                                      datosParaAlmacenar = this.filtrarRegistrosExclusionBCP01(extractoInfo.datosExtracto);
                                      datosParaExcel = datosParaAlmacenar; // Usar datos filtrados también para Excel
-                                     console.log(`🔍 [FILTER] Datos filtrados BCP.01:`, datosParaAlmacenar.length, 'registros');
+                                     //console.log(`🔍 [FILTER] Datos filtrados BCP.01:`, datosParaAlmacenar.length, 'registros');
                                  }
                                  
                                 // Almacenar datos de extracto en JSON (filtrados para BCP.01)
                                 window.datosHojaTrabajoJSON.extractos[codigoCuenta] = datosParaAlmacenar;
-                                console.log(`📊 [JSON] Almacenados datos extracto ${codigoCuenta}:`, datosParaAlmacenar.length, 'filas');
+                                //console.log(`📊 [JSON] Almacenados datos extracto ${codigoCuenta}:`, datosParaAlmacenar.length, 'filas');
                                 
                                 const wsExtracto = XLSX.utils.aoa_to_sheet(datosParaExcel);
                                 
@@ -15513,7 +15513,7 @@
                      if (datosCompletos.datosSaldo && datosCompletos.datosSaldo.length > 0) {
                          // Almacenar datos SALDO en JSON
                          window.datosHojaTrabajoJSON.saldo = datosCompletos.datosSaldo;
-                         console.log('📊 [JSON] Almacenados datos SALDO:', datosCompletos.datosSaldo.length, 'filas');
+                         //console.log('📊 [JSON] Almacenados datos SALDO:', datosCompletos.datosSaldo.length, 'filas');
                          
                          const wsSaldo = XLSX.utils.aoa_to_sheet(datosCompletos.datosSaldo);
                          
@@ -15537,12 +15537,12 @@
                      this.outputWorkbook = wb;
                      
                      // Log final de datos almacenados en JSON
-                     console.log('📊 [JSON] Resumen de datos almacenados:');
-                     console.log('📊 [JSON] - SALDO:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
-                     console.log('📊 [JSON] - MAYOR:', window.datosHojaTrabajoJSON.mayor.length, 'filas');
-                     console.log('📊 [JSON] - MAYOR.USD:', window.datosHojaTrabajoJSON.mayorUSD.length, 'filas');
-                     console.log('📊 [JSON] - EXTRACTOS:', Object.keys(window.datosHojaTrabajoJSON.extractos).length, 'cuentas');
-                     console.log('📊 [JSON] Datos completos:', window.datosHojaTrabajoJSON);
+                     //console.log('📊 [JSON] Resumen de datos almacenados:');
+                     //console.log('📊 [JSON] - SALDO:', window.datosHojaTrabajoJSON.saldo.length, 'filas');
+                     //console.log('📊 [JSON] - MAYOR:', window.datosHojaTrabajoJSON.mayor.length, 'filas');
+                     //console.log('📊 [JSON] - MAYOR.USD:', window.datosHojaTrabajoJSON.mayorUSD.length, 'filas');
+                     //console.log('📊 [JSON] - EXTRACTOS:', Object.keys(window.datosHojaTrabajoJSON.extractos).length, 'cuentas');
+                     //console.log('📊 [JSON] Datos completos:', window.datosHojaTrabajoJSON);
                      
                      // 🔧 GUARDAR DATOS EN ARCHIVO JSON PARA ANÁLISIS (DESACTIVADO)
                      // this.guardarDatosJSON(window.datosHojaTrabajoJSON);
@@ -15649,7 +15649,7 @@
                      });
                      
                  } catch (error) {
-                     console.error('❌ Error en procesarChequesNoCobradosDesdeOutput:', error);
+                     //console.error('❌ Error en procesarChequesNoCobradosDesdeOutput:', error);
                  }
              },
 
@@ -15755,7 +15755,7 @@
                     });
                     
                 } catch (error) {
-                    console.error('❌ Error en procesarChequesNoCobradosDesdeResultado:', error);
+                    //console.error('❌ Error en procesarChequesNoCobradosDesdeResultado:', error);
                 }
             },
 
@@ -15796,10 +15796,10 @@
                      
                     // PROCESAR REGISTROS DEL MAYOR (PASO 2)
                     if (window.registrosOmitidosPaso2 && window.registrosOmitidosPaso2.length > 0) {
-                        console.log('🔍 [DEBUG PARTE 2] Total registros omitidos del Paso 2:', window.registrosOmitidosPaso2.length);
-                        console.log('🔍 [DEBUG PARTE 2] Registros omitidos:', window.registrosOmitidosPaso2);
-                       // console.error("window.registrosOmitidosPaso2:"+ codigoCuentaActual);
-                       // console.error(window.registrosOmitidosPaso2);
+                        //console.log('🔍 [DEBUG PARTE 2] Total registros omitidos del Paso 2:', window.registrosOmitidosPaso2.length);
+                        //console.log('🔍 [DEBUG PARTE 2] Registros omitidos:', window.registrosOmitidosPaso2);
+                       // //console.error("window.registrosOmitidosPaso2:"+ codigoCuentaActual);
+                       // //console.error(window.registrosOmitidosPaso2);
                         window.registrosOmitidosPaso2.forEach(registro => {
 
                             
@@ -15829,7 +15829,7 @@
                             resumenPorTerminoCuenta[clave].cantidad += 1;
                             
                             // DEBUG: Mostrar registro específico que se está procesando
-                          /*  console.log('🔍 [DEBUG PARTE 2] Procesando registro:', {
+                          /*  //console.log('🔍 [DEBUG PARTE 2] Procesando registro:', {
                                 cuenta: registro.cuenta,
                                 termino: registro.termino,
                                 glosa: registro.glosa,
@@ -15842,7 +15842,7 @@
                     } else {
                     }
 
-                    console.error(window.registrosOmitidosPaso2);
+                    //console.error(window.registrosOmitidosPaso2);
                     
                     // PROCESAR REGISTROS DE EXTRACTOS DINÁMICOS (todos los bancos)
                     if (codigoCuentaActual && nombrePestaña) {
@@ -15911,7 +15911,7 @@
                         if (!resumenPorFuente[r.fuente]) resumenPorFuente[r.fuente] = 0;
                         resumenPorFuente[r.fuente]++;
                     });
-                    console.log(resumenPorFuente);
+                    //console.log(resumenPorFuente);
                      
                      // Crear datos para la hoja
                      const datos = [];
@@ -15935,7 +15935,7 @@
                     return datos;
                      
                  } catch (error) {
-                     console.error('Error generando datos de tarjetas (Depositos Bancos Parte 2):', error);
+                     //console.error('Error generando datos de tarjetas (Depositos Bancos Parte 2):', error);
                      return null;
                  }
              },
@@ -15967,8 +15967,8 @@
                      
                     // PROCESAR REGISTROS DEL MAYOR (PASO 2)
                     if (window.registrosOmitidosPaso2 && window.registrosOmitidosPaso2.length > 0) {
-                        console.log('🔍 [DEBUG PARTE 2] Total registros omitidos del Paso 2:', window.registrosOmitidosPaso2.length);
-                        console.log('🔍 [DEBUG PARTE 2] Registros omitidos:', window.registrosOmitidosPaso2);
+                        //console.log('🔍 [DEBUG PARTE 2] Total registros omitidos del Paso 2:', window.registrosOmitidosPaso2.length);
+                        //console.log('🔍 [DEBUG PARTE 2] Registros omitidos:', window.registrosOmitidosPaso2);
                         
                         window.registrosOmitidosPaso2.forEach(registro => {
                              const termino = registro.termino;
@@ -15996,7 +15996,7 @@
                             resumenPorTerminoCuenta[clave].cantidad += 1;
                             
                             // DEBUG: Mostrar registro específico que se está procesando
-                          /*  console.log('🔍 [DEBUG PARTE 2] Procesando registro:', {
+                          /*  //console.log('🔍 [DEBUG PARTE 2] Procesando registro:', {
                                 cuenta: registro.cuenta,
                                 termino: registro.termino,
                                 glosa: registro.glosa,
@@ -16076,7 +16076,7 @@
                         if (!resumenPorFuente[r.fuente]) resumenPorFuente[r.fuente] = 0;
                         resumenPorFuente[r.fuente]++;
                     });
-                    console.log(resumenPorFuente);
+                    //console.log(resumenPorFuente);
                      
                      // Crear datos para la hoja
                      const datos = [];
@@ -16100,7 +16100,7 @@
                     return datos;
                      
                  } catch (error) {
-                     console.error('Error generando datos de tarjetas:', error);
+                     //console.error('Error generando datos de tarjetas:', error);
                      return null;
                  }
              },
@@ -16166,7 +16166,7 @@
                             if (descripcion.includes(termino)) {
                                 contieneTerminoExclusion = true;
                                 registrosEliminados++;
-                               // console.log(`🗑️ [FILTER] Eliminando registro BCP.01: "${descripcion}" (contiene: ${termino})`);
+                               // //console.log(`🗑️ [FILTER] Eliminando registro BCP.01: "${descripcion}" (contiene: ${termino})`);
                                 break;
                             }
                         }
@@ -16177,12 +16177,12 @@
                         }
                     }
                     
-                    //console.log(`🔍 [FILTER] BCP.01 filtrado: ${datosExtracto.length} → ${datosFiltrados.length} registros (eliminados: ${registrosEliminados})`);
+                    ////console.log(`🔍 [FILTER] BCP.01 filtrado: ${datosExtracto.length} → ${datosFiltrados.length} registros (eliminados: ${registrosEliminados})`);
                     
                     return datosFiltrados;
                     
                 } catch (error) {
-                    console.error('❌ Error filtrando registros de exclusión BCP.01:', error);
+                    //console.error('❌ Error filtrando registros de exclusión BCP.01:', error);
                     return datosExtracto; // Retornar datos originales en caso de error
                 }
             },
@@ -16271,7 +16271,7 @@
                     return registrosFiltrados;
                      
                  } catch (error) {
-                     console.error('Error filtrando registros de BCP.01:', error);
+                     //console.error('Error filtrando registros de BCP.01:', error);
                      return [];
                  }
              },
@@ -16369,7 +16369,7 @@
                      return registrosFiltrados;
                      
                  } catch (error) {
-                     console.error(`Error filtrando registros de extracto ${codigoCuenta}:`, error);
+                     //console.error(`Error filtrando registros de extracto ${codigoCuenta}:`, error);
                      return [];
                  }
              },
@@ -16393,7 +16393,7 @@
                      return ultimoDia.toString().padStart(2, '0');
                      
                  } catch (error) {
-                     console.error('Error calculando FDOC:', error);
+                     //console.error('Error calculando FDOC:', error);
                      return '31'; // Valor por defecto
                  }
              },
@@ -16454,11 +16454,11 @@
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(url);
                     
-                    console.log(`📊 [JSON] Archivo guardado: ${fileName}`);
-                    console.log('📊 [JSON] Resumen:', resumen.resumen);
+                    //console.log(`📊 [JSON] Archivo guardado: ${fileName}`);
+                    //console.log('📊 [JSON] Resumen:', resumen.resumen);
                     
                 } catch (error) {
-                    console.error('❌ Error guardando datos JSON:', error);
+                    //console.error('❌ Error guardando datos JSON:', error);
                 }
             },
 
@@ -18887,7 +18887,7 @@
             aplicarFormatoNumeros(worksheet, columnasIndices) {
                 try {
                     // DEBUG: Verificar configuración actual de columnas
-                    console.log('🔧 [FORMATO] Aplicando formato numFmt a columnas:', columnasIndices);
+                    //console.log('🔧 [FORMATO] Aplicando formato numFmt a columnas:', columnasIndices);
                     
                     // Aplicar formato de número usando numFmt a las columnas especificadas
                     columnasIndices.forEach(colIndex => {
@@ -18896,7 +18896,7 @@
                         // Usar getColumn() para aplicar formato directamente
                         if (worksheet.getColumn) {
                             worksheet.getColumn(colIndex).numFmt = '#,##0.00';
-                            console.log(`🔧 [FORMATO] Aplicado formato #,##0.00 a columna ${colIndex} (${colLetter}) usando getColumn()`);
+                            //console.log(`🔧 [FORMATO] Aplicado formato #,##0.00 a columna ${colIndex} (${colLetter}) usando getColumn()`);
                         } else {
                             // Fallback: usar configuración manual de columnas
                             if (!worksheet['!cols']) {
@@ -18906,14 +18906,14 @@
                                 worksheet['!cols'][colIndex] = {};
                             }
                             worksheet['!cols'][colIndex].numFmt = '#,##0.00';
-                            console.log(`🔧 [FORMATO] Aplicado formato #,##0.00 a columna ${colIndex} (${colLetter}) usando !cols`);
+                            //console.log(`🔧 [FORMATO] Aplicado formato #,##0.00 a columna ${colIndex} (${colLetter}) usando !cols`);
                         }
                     });
                     
-                    console.log('🔧 [FORMATO] Aplicado formato #,##0.00 a columnas:', columnasIndices);
+                    //console.log('🔧 [FORMATO] Aplicado formato #,##0.00 a columnas:', columnasIndices);
                     
                 } catch (error) {
-                    console.error('❌ [FORMATO] Error aplicando formato:', error);
+                    //console.error('❌ [FORMATO] Error aplicando formato:', error);
                 }
             }
         }; // cierre del objeto return
@@ -18923,4 +18923,5 @@
         <!-- Tabla de Cuentas -->
 </div>
 </body>
+
 </html>
