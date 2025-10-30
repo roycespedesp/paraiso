@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -14499,12 +14499,12 @@
                             
                             // Mostrar los primeros 3 registros para ver la estructura
                             datosMapeados.slice(0, 3).forEach((item, index) => {
-                                //console.log(`🔍 [DEBUG PARTE 2] Registro ${index + 1}:`, {
+                                /*console.log(`🔍 [DEBUG PARTE 2] Registro ${index + 1}:`, {
                                     cuenta: item['CUENTA'],
                                     concepto: item['Concepto Reporte Final'],
                                     estado: item['ESTADO'],
                                     debe: item['DEBE']
-                                });
+                                });*/
                             });
                             /*
                             const cargosBancosParte2 = datosMapeados.filter(item => {
@@ -14515,12 +14515,12 @@
                                 // DEBUG: Log detallado para cada registro que coincida parcialmente
                                 if (cuenta.toString() === codigoCuentaActual) {
                                     //console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
-                                        cuenta: cuenta,
-                                        concepto: concepto,
-                                        estado: estado,
-                                        conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
-                                        estadoMatch: estado === 'Pendiente'
-                                    });
+                                    //    cuenta: cuenta,
+                                    //    concepto: concepto,
+                                    //    estado: estado,
+                                    //    conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
+                                    //    estadoMatch: estado === 'Pendiente'
+                                    //});
                                 }
                                 
                                 return cuenta.toString() === codigoCuentaActual && 
@@ -14616,12 +14616,12 @@
                                 //console.log('🔍 [DEBUG SBP 1041301] TODOS los registros para cuenta 1041301:', todosRegistrosSBP.length);
                                 todosRegistrosSBP.forEach((item, index) => {
                                     //console.log(`🔍 [DEBUG SBP 1041301] Registro ${index + 1}:`, {
-                                        concepto: item['Concepto Reporte Final'],
-                                        estado: item['ESTADO'],
-                                        importe: item['Importe'],
-                                        debe: item['DEBE'],
-                                        haber: item['HABER']
-                                    });
+                                    //    concepto: item['Concepto Reporte Final'],
+                                    //    estado: item['ESTADO'],
+                                    //    importe: item['Importe'],
+                                    //    debe: item['DEBE'],
+                                    //    haber: item['HABER']
+                                    //});
                                 });
                             }
                             
@@ -14635,11 +14635,11 @@
                             //console.log(`🔍 [DEBUG PARTE 3] Registros con concepto CARGO EN BANCOS para cuenta ${codigoCuentaActual}:`, registrosConCargoBancos.length);
                             registrosConCargoBancos.forEach((item, index) => {
                                 //console.log(`🔍 [DEBUG PARTE 3] Registro ${index + 1}:`, {
-                                    concepto: item['Concepto Reporte Final'],
-                                    estado: item['ESTADO'],
-                                    importe: item['Importe'],
-                                    fdoc: item['FDOC']
-                                });
+                                //    concepto: item['Concepto Reporte Final'],
+                                //    estado: item['ESTADO'],
+                                //    importe: item['Importe'],
+                                //    fdoc: item['FDOC']
+                                //});
                             });
 
                             const cargosBancosParte3 = datosMapeados.filter(item => {
@@ -14651,33 +14651,33 @@
                                 if (codigoCuentaActual === '1041301') {
                                     if (cuenta === '1041301') {
                                         //console.log('🔍 [DEBUG SBP 1041301] Registro encontrado para SBP:', {
-                                            concepto: concepto,
-                                            estado: estado,
-                                            importe: item['Importe'],
-                                            debe: item['DEBE'],
-                                            conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
-                                            estadoMatch: estado === 'Pendiente',
-                                            conceptoExacto: concepto,
-                                            estadoExacto: estado,
-                                            conceptoLength: concepto.length,
-                                            estadoLength: estado.length,
-                                            conceptoCharCodes: concepto.split('').map(c => c.charCodeAt(0)),
-                                            estadoCharCodes: estado.split('').map(c => c.charCodeAt(0))
-                                        });
+                                        //    concepto: concepto,
+                                        //    estado: estado,
+                                        //    importe: item['Importe'],
+                                        //    debe: item['DEBE'],
+                                        //    conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
+                                        //    estadoMatch: estado === 'Pendiente',
+                                        //    conceptoExacto: concepto,
+                                        //    estadoExacto: estado,
+                                        //    conceptoLength: concepto.length,
+                                        //    estadoLength: estado.length,
+                                        //    conceptoCharCodes: concepto.split('').map(c => c.charCodeAt(0)),
+                                        //    estadoCharCodes: estado.split('').map(c => c.charCodeAt(0))
+                                        //});
                                     }
                                 }
                                 
                                 // DEBUG: Log detallado para identificar el problema
                                 if (cuenta.toString() === codigoCuentaActual && concepto.includes('CARGO EN BANCOS')) {
                                     //console.log('🔍 [DEBUG PARTE 3] Registro encontrado:', {
-                                        cuenta: cuenta,
-                                        concepto: concepto,
-                                        estado: estado,
-                                        codigoCuentaActual: codigoCuentaActual,
-                                        conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS' || concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
-                                        estadoMatch: estado === 'Pendiente',
-                                        importe: item['Importe']
-                                    });
+                                    //    cuenta: cuenta,
+                                    //    concepto: concepto,
+                                    //    estado: estado,
+                                    //    codigoCuentaActual: codigoCuentaActual,
+                                    //    conceptoMatch: concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS' || concepto === '(+) CARGO EN BANCOS NO REGISTRADO EN LIBROS',
+                                    //    estadoMatch: estado === 'Pendiente',
+                                    //    importe: item['Importe']
+                                    //});
                                 }
                                 
                                 return cuenta.toString() === codigoCuentaActual && 
@@ -15185,11 +15185,11 @@
                         
                         if (resultado.tieneDetalles) {
                             //console.log(`🔧 [GROUPING] Configurando agrupación para: ${titulo}`, {
-                                titulo: resultado.filaTitulo,
-                                inicio: resultado.filaInicioDetalles,
-                                fin: resultado.filaFinDetalles,
-                                totalDetalles: resultado.totalDetalles
-                            });
+                            //    titulo: resultado.filaTitulo,
+                            //    inicio: resultado.filaInicioDetalles,
+                            //    fin: resultado.filaFinDetalles,
+                            //    totalDetalles: resultado.totalDetalles
+                            //});
                             
                             // Configurar fila del título (nivel 0, sin agrupar)
                             worksheet['!rows'][resultado.filaTitulo] = {
@@ -15350,25 +15350,25 @@
                 tieneDetalles = totalDetalles > 0;
                 
                 //console.log(`🔍 [GROUPING DEBUG] Resultado final para "${titulo}":`, {
-                    filaTitulo,
-                    filaInicioDetalles,
-                    filaFinDetalles,
-                    totalDetalles,
-                    tieneDetalles
-                });
+                //    filaTitulo,
+                //    filaInicioDetalles,
+                //    filaFinDetalles,
+                //    totalDetalles,
+                //    tieneDetalles
+                //});
                 
                 // Debug adicional para títulos "(-)"
                 if (titulo.startsWith('(-)')) {
                     //console.log(`🔍 [GROUPING DEBUG] Título "(-)": ${titulo}`, {
-                        filaTitulo,
-                        filaInicioDetalles,
-                        filaFinDetalles,
-                        totalDetalles,
-                        tieneDetalles,
-                        filaTituloData: datosConciliacion[filaTitulo],
-                        filaInicioData: datosConciliacion[filaInicioDetalles],
-                        filaFinData: datosConciliacion[filaFinDetalles]
-                    });
+                    //    filaTitulo,
+                    //    filaInicioDetalles,
+                    //    filaFinDetalles,
+                    //    totalDetalles,
+                    //    tieneDetalles,
+                    //    filaTituloData: datosConciliacion[filaTitulo],
+                    //    filaInicioData: datosConciliacion[filaInicioDetalles],
+                    //    filaFinData: datosConciliacion[filaFinDetalles]
+                    //});
                     
                     // Debug específico para fechas vacías
                     if (tieneDetalles) {
@@ -15376,12 +15376,12 @@
                         for (let i = filaInicioDetalles; i <= Math.min(filaFinDetalles, filaInicioDetalles + 3); i++) {
                             const fila = datosConciliacion[i];
                             //console.log(`  Fila ${i}:`, {
-                                fecha: fila[0],
-                                concepto: fila[1],
-                                ref: fila[2],
-                                importe: fila[3],
-                                fechaVacia: fila[0] === '' || fila[0] === undefined || fila[0] === null
-                            });
+                            //    fecha: fila[0],
+                            //    concepto: fila[1],
+                            //    ref: fila[2],
+                            //    importe: fila[3],
+                            //    fechaVacia: fila[0] === '' || fila[0] === undefined || fila[0] === null
+                            //});
                         }
                     }
                 }
@@ -18922,6 +18922,7 @@
 </body>
 
 </html>
+
 
 
 
