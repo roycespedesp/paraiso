@@ -1619,12 +1619,12 @@
                     if (linea.includes('\t')) tieneTabs++;
                 });
                 
-                //console.log('🔍 [CHEQUES DEBUG] Análisis:', {
+                /*console.log('🔍 [CHEQUES DEBUG] Análisis:', {
                     tieneComasSeparadoras,
                     tieneEspaciosMultiples,
                     tieneTabs,
                     totalMuestras: muestras.length
-                });
+                });*/
                 
                 // Determinar el mejor método - priorizar espacios múltiples sobre comas
                 if (tieneEspaciosMultiples === muestras.length) {
@@ -12556,12 +12556,12 @@
                     datosSaldo = datosCompletos?.resultado?.datosSaldo;
                 }
                 
-                //console.log('🔵 [CHEQUES ETAPA 1] Datos SALDO obtenidos:', {
+                /*console.log('🔵 [CHEQUES ETAPA 1] Datos SALDO obtenidos:', {
                     existe: !!datosSaldo,
                     esArray: Array.isArray(datosSaldo),
                     filas: datosSaldo ? datosSaldo.length : 0
                 });
-                
+                */
                 if (!Array.isArray(datosSaldo) || datosSaldo.length === 0) {
                     //console.log('❌ [CHEQUES ETAPA 1] No hay datos SALDO disponibles');
                     return [];
@@ -12601,7 +12601,7 @@
                 const importeCol = haberCol !== -1 ? haberCol : headers.findIndex(h => h && h.toString().toUpperCase() === 'IMPORTE'); // Columna H o O
                 const estadoCol = headers.findIndex(h => h && h.toString().toUpperCase() === 'ESTADO'); // Columna P (15)
 
-                //console.log('🔵 [CHEQUES ETAPA 1] Columnas identificadas (índices):', {
+                /*console.log('🔵 [CHEQUES ETAPA 1] Columnas identificadas (índices):', {
                     cuentaCol,
                     conceptoCol,
                     fdocCol,
@@ -12610,7 +12610,7 @@
                     haberCol,
                     importeCol,
                     estadoCol
-                });
+                });*/
                 
                 //console.log('🔵 [CHEQUES ETAPA 1] Headers completos:', headers);
                 //console.log('🔵 [CHEQUES ETAPA 1] Buscando concepto exacto "Concepto" y estado "ESTADO"');
@@ -13966,11 +13966,7 @@
                                 });
                                 
                                 //console.log('🔍 [DEBUG] Depósitos Parte 1 encontrados:', depositosParte1.length);
-                                //console.log('🔍 [DEBUG] Registros que cumplen criterios:', depositosParte1.map(item => ({
-                                    estado: item[estadoCol],
-                                    monto: esIBK ? item[abonoCol] : item[montoCol],
-                                    concepto: item[2] || 'N/A'
-                                })));
+                                
                                 
                                 const totalParte1 = depositosParte1.reduce((sum, item) => {
                                     const monto = esIBK ? (parseFloat(item[abonoCol]) || 0) : (parseFloat(item[montoCol]) || 0);
@@ -14545,14 +14541,14 @@
 
                             // DEBUG: Log detallado para cada registro con cuenta coincidente
                             if (cuenta === codigoCuentaActual.toString()) {
-                                //console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
+                                /*console.log('🔍 [DEBUG PARTE 2] Registro con cuenta coincidente:', {
                                     cuenta: cuenta,
                                     conceptoOriginal: item['Concepto Reporte Final'],
                                     conceptoNormalizado: concepto,
                                     estado: estado,
                                     conceptoMatch: esConceptoValido,
                                     estadoMatch: estado === 'Pendiente'
-                                });
+                                });*/
                             }
 
                             return cuenta === codigoCuentaActual.toString() &&
@@ -15107,7 +15103,7 @@
                             wsConciliacion[celdaSaldoLibros] = { f: formulaSum };
                             
                             //console.log('🔍 [FÓRMULA] ✅ Fórmula completa agregada para SALDO EN LIBROS:', formulaSum);
-                            //console.log('🔍 [FÓRMULA] Celdas encontradas dinámicamente:', {
+                            /*console.log('🔍 [FÓRMULA] Celdas encontradas dinámicamente:', {
                                 saldoBancos: `E${filaSaldoBancos}`,
                                 chequesNoCobrados: filaChequesNoCobrados > 0 ? `E${filaChequesNoCobrados}` : 'No encontrado',
                                 depositosBancos: filaDepositosBancos > 0 ? `E${filaDepositosBancos}` : 'No encontrado',
@@ -15116,15 +15112,16 @@
                                 cargoLibros: filaCargoLibros > 0 ? `E${filaCargoLibros}` : 'No encontrado',
                                 saldoLibros: `E${filaSaldoLibros}`
                             });
+                            */
                             
                             // Log adicional para verificar que la fórmula es realmente dinámica
                             //console.log('🔍 [FÓRMULA] 📊 Total de filas en datosConciliacion:', datosConciliacion.length);
                             //console.log('🔍 [FÓRMULA] 🔄 La fórmula incluye TODOS los campos de conciliación');
                         } else {
-                            //console.log('🔍 [FÓRMULA] ⚠️ No se pudo crear la fórmula - filas no encontradas:', {
+                            /*console.log('🔍 [FÓRMULA] ⚠️ No se pudo crear la fórmula - filas no encontradas:', {
                                 filaSaldoBancos,
                                 filaSaldoLibros
-                            });
+                            });*/
                         }
                         
                         // Configurar agrupación de filas para todas las pestañas con códigos de cuenta válidos
@@ -18925,4 +18922,5 @@
 </body>
 
 </html>
+
 
