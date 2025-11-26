@@ -2108,6 +2108,69 @@
                      const sheetName = workbook.SheetNames[0];
                      const worksheet = workbook.Sheets[sheetName];
                     let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+
+                    // LOG SOLICITADO: JSON RAW IBK
+                    // Verificamos si es IBK por config o por nombre de archivo para asegurar el log
+                    const isIBK = (cuentaConfig && (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD')) || 
+                                  (file.name && file.name.toUpperCase().includes('IBK'));
+
+                    if (isIBK) {
+                        console.log('--- JSON RAW IBK LEIDO DEL ARCHIVO (SOLICITADO) ---');
+                        console.log('Archivo:', file.name);
+                        console.log('Data:', jsonData);
+                        console.log('--------------------------------------');
+                    }
+                    
+                    // CORRECCIÓN AUTOMÁTICA PARA IBK.PEN (Formato Octubre 2025)
+                    // El nuevo formato agrega una columna vacía al inicio, desplazando los datos.
+                    // Si detectamos esto en IBK (PEN), eliminamos la primera columna para que coincida con la configuración existente (Date at index 0).
+                    if (cuentaConfig && cuentaConfig.alias === 'IBK') {
+                        let rowsChecked = 0;
+                        let emptyCol0Count = 0;
+                        let validDateCol1Count = 0;
+                        
+                        // Analizar las primeras filas con datos (saltando headers potenciales si es necesario, pero aquí miramos raw)
+                        // Buscamos patrón: Col0 VACÍA y Col1 FECHA
+                        for (let i = 0; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            if (!row || row.length < 2) continue;
+                            
+                            // Verificar si parece una fila de datos (tiene fecha)
+                            // Aceptamos string DD/MM/YYYY o número serial Excel (> 40000)
+                            const col1 = row[1];
+                            const isDateCol1 = (typeof col1 === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(col1)) || 
+                                               (typeof col1 === 'number' && col1 > 30000); // 30000 es ~1982
+                            
+                            if (isDateCol1) {
+                                rowsChecked++;
+                                if (row[0] === "" || row[0] === null || row[0] === undefined) {
+                                    emptyCol0Count++;
+                                    validDateCol1Count++;
+                                }
+                            }
+                            
+                            if (rowsChecked >= 10) break; // Suficiente muestra
+                        }
+                        
+                        // Si encontramos filas de datos y TODAS tienen la col 0 vacía y la col 1 con fecha
+                        if (rowsChecked > 0 && emptyCol0Count === rowsChecked) {
+                            console.log('⚠️ [IBK FIX] Detectado formato desplazado (estilo Oct 2025). Normalizando datos eliminando primera columna vacía...');
+                            jsonData = jsonData.map(row => {
+                                if (Array.isArray(row) && row.length > 0) {
+                                    return row.slice(1);
+                                }
+                                return row;
+                            });
+                            
+                            // Log de verificación post-fix
+                            if (jsonData.length > 0) {
+                                const sampleRow = jsonData.find(r => r && r.length > 0 && ((typeof r[0] === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(r[0])) || (typeof r[0] === 'number' && r[0] > 30000)));
+                                if (sampleRow) {
+                                    console.log('✅ [IBK FIX] Datos normalizados. Ejemplo fila:', sampleRow);
+                                }
+                            }
+                        }
+                    }
                     
 
                     //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
