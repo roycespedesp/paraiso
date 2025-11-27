@@ -16053,6 +16053,32 @@
                                 resumenPorTerminoCuenta[clave].cantidad += 1;
                             });
                         }
+                        
+                        // PROCESAR REGISTROS DE IBK
+                        const registrosIBK = this.filtrarRegistrosIBK();
+                        if (registrosIBK && registrosIBK.length > 0) {
+                             registrosIBK.forEach(registro => {
+                                 const termino = registro.termino;
+                                 const clave = `${termino}_1041101_IBK`; // Clave única para IBK
+                                 
+                                 if (!resumenPorTerminoCuenta[clave]) {
+                                     resumenPorTerminoCuenta[clave] = {
+                                         cuenta: '1041101',
+                                         descrip: 'INTERBANK M/N',
+                                         fdoc: registro.fdoc,
+                                         glosa: registro.glosa,
+                                         debe: 0,
+                                         haber: 0,
+                                         cantidad: 0,
+                                         fuente: 'IBK'
+                                     };
+                                 }
+                                 
+                                 resumenPorTerminoCuenta[clave].debe += parseFloat(registro.debe || 0);
+                                 resumenPorTerminoCuenta[clave].haber += parseFloat(registro.haber || 0);
+                                resumenPorTerminoCuenta[clave].cantidad += 1;
+                            });
+                        }
                     }
                     
                     // Verificar que tenemos al menos algunos registros
@@ -16218,6 +16244,32 @@
                                 resumenPorTerminoCuenta[clave].cantidad += 1;
                             });
                         }
+                        
+                        // PROCESAR REGISTROS DE IBK
+                        const registrosIBK = this.filtrarRegistrosIBK();
+                        if (registrosIBK && registrosIBK.length > 0) {
+                             registrosIBK.forEach(registro => {
+                                 const termino = registro.termino;
+                                 const clave = `${termino}_1041101_IBK`; // Clave única para IBK
+                                 
+                                 if (!resumenPorTerminoCuenta[clave]) {
+                                     resumenPorTerminoCuenta[clave] = {
+                                         cuenta: '1041101',
+                                         descrip: 'INTERBANK M/N',
+                                         fdoc: registro.fdoc,
+                                         glosa: registro.glosa,
+                                         debe: 0,
+                                         haber: 0,
+                                         cantidad: 0,
+                                         fuente: 'IBK'
+                                     };
+                                 }
+                                 
+                                 resumenPorTerminoCuenta[clave].debe += parseFloat(registro.debe || 0);
+                                 resumenPorTerminoCuenta[clave].haber += parseFloat(registro.haber || 0);
+                                resumenPorTerminoCuenta[clave].cantidad += 1;
+                            });
+                        }
                     }
                     
                     // Verificar que tenemos al menos algunos registros
@@ -16262,7 +16314,7 @@
                 try {
                     // Términos de exclusión específicos para BCP.01 (mismos que en filtrarRegistrosBCP01)
                     const terminosExclusion = [
-                        'COMPAN',
+                       // 'COMPAN',
                         'CIA DE SERV',
                         'DE DINERS CLUB PERU S.',
                         'DE GAS NATURAL DE LIMA',
@@ -16339,12 +16391,115 @@
                     return datosExtracto; // Retornar datos originales en caso de error
                 }
             },
+            /*Acá se quita COMPAN porque no es necesario*/
+            filtrarRegistrosIBK() {
+                try {
+                    // Términos de exclusión específicos para IBK (Interbank)
+                    const terminosExclusion = [
+                        'AMEX',
+                        'DINERS',
+                        'MASTERCARD'
+                    ];
+                     // Verificar que tenemos datos de extractos
+                     if (!window.datosCompletos || !window.datosCompletos.extractosPorCuenta) {
+                         return [];
+                     }
+                     
+                     // Obtener datos de IBK (cuenta 1041101)
+                     const extractoInfo = window.datosCompletos.extractosPorCuenta.get('1041101');
+                     
+                     // extractosPorCuenta guarda objetos con {config, datos, datosExtracto, archivo}
+                     const datosIBK = extractoInfo?.datos || extractoInfo?.datosExtracto;
+                     
+                     if (!datosIBK || !Array.isArray(datosIBK) || datosIBK.length === 0) {
+                         return [];
+                     }
+                     // Buscar el header para identificar las columnas
+                     let headerRowIndex = -1;
+                     let colDescripcion = -1;
+                     let colImporte = -1;
+                     let colAbono = -1;
+                     let colFecha = -1;
+                     
+                     for (let i = 0; i < Math.min(20, datosIBK.length); i++) {
+                         const fila = datosIBK[i];
+                         if (Array.isArray(fila)) {
+                             for (let j = 0; j < fila.length; j++) {
+                                 const celda = String(fila[j] || '').toLowerCase();
+                                 if (celda.includes('descripción') || celda.includes('descripcion')) {
+                                     colDescripcion = j;
+                                     headerRowIndex = i;
+                                 }
+                                 // IBK tiene Cargo y Abono separados
+                                 if (celda.includes('cargo')) {
+                                     colImporte = j;
+                                 }
+                                 if (celda.includes('abono')) {
+                                     colAbono = j;
+                                 }
+                                 if (celda.includes('fecha')) {
+                                     colFecha = j;
+                                 }
+                             }
+                             if (colDescripcion >= 0 && (colImporte >= 0 || colAbono >= 0)) break;
+                         }
+                     }
+                     
+                     if (headerRowIndex === -1 || colDescripcion === -1) {
+                         return [];
+                     }
+                     // Filtrar registros que contengan los términos de exclusión
+                     const registrosFiltrados = [];
+                     
+                     for (let i = headerRowIndex + 1; i < datosIBK.length; i++) {
+                         const fila = datosIBK[i];
+                         if (!Array.isArray(fila) || fila.length <= colDescripcion) continue;
+                         
+                         const descripcion = String(fila[colDescripcion] || '').toUpperCase();
+                         const fecha = colFecha >= 0 ? (fila[colFecha] || '') : '';
+                         
+                         let cargo = 0;
+                         let abono = 0;
+                         
+                         if (colImporte >= 0) {
+                             const val = parseFloat(fila[colImporte]);
+                             if (!isNaN(val)) cargo = val;
+                         }
+                         
+                         if (colAbono >= 0) {
+                             const val = parseFloat(fila[colAbono]);
+                             if (!isNaN(val)) abono = val;
+                         }
+                         
+                         // Buscar si la descripción contiene algún término de exclusión
+                         for (const termino of terminosExclusion) {
+                             if (descripcion.includes(termino)) {
+                                 registrosFiltrados.push({
+                                     termino: termino,
+                                     glosa: descripcion,
+                                     debe: abono, // Abono en banco va a DEBE
+                                     haber: cargo, // Cargo en banco va a HABER
+                                     fdoc: fecha,
+                                     filaOriginal: i
+                                 });
+                                 break; // Solo agregar una vez por fila
+                             }
+                        }
+                    }
+                    
+                    return registrosFiltrados;
+                     
+                 } catch (error) {
+                     //console.error('Error filtrando registros de IBK:', error);
+                     return [];
+                 }
+             },
 
             filtrarRegistrosBCP01() {
                 try {
                     // Términos de exclusión específicos para BCP.01
                     const terminosExclusion = [
-                        'COMPAN',
+                       // 'COMPAN',
                         'CIA DE SERV',
                         'DE DINERS CLUB PERU S.',
                         'DE GAS NATURAL DE LIMA',
