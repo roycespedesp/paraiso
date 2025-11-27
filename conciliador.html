@@ -245,22 +245,44 @@
                                 <div x-show="files.length > 0" class="mt-4 space-y-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                                     <h4 class="text-sm font-medium text-yellow-800">Datos Requeridos</h4>
                                     <div class="grid grid-cols-1 gap-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-700 mb-1">Saldo DET (S/)</label>
-                                            <input type="number" 
-                                                   x-model="saldoDET" 
-                                                   step="0.01" 
-                                                   placeholder="0.00"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Saldo DET (S/)</label>
+                                                <input type="number" 
+                                                       x-model="saldoDET" 
+                                                       step="0.01" 
+                                                       placeholder="0.00"
+                                                       class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Saldo BN (S/)</label>
+                                                <input type="number" 
+                                                       x-model="saldoBN" 
+                                                       step="0.01" 
+                                                       placeholder="0.00"
+                                                       class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-700 mb-1">Saldo BN (S/)</label>
-                                            <input type="number" 
-                                                   x-model="saldoBN" 
-                                                   step="0.01" 
-                                                   placeholder="0.00"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Saldo SBP (S/)</label>
+                                                <input type="number" 
+                                                       x-model="saldoSBP" 
+                                                       step="0.01" 
+                                                       placeholder="0.00"
+                                                       class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Saldo SBP ($)</label>
+                                                <input type="number" 
+                                                       x-model="saldoSBPUSD" 
+                                                       step="0.01" 
+                                                       placeholder="0.00"
+                                                       class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
                                         </div>
+
                                         <div>
                                             <label class="block text-xs font-medium text-gray-700 mb-1">Tipo de Cambio</label>
                                             <input type="number" 
@@ -279,7 +301,7 @@
                                     
                                     <!-- Botón para limpiar solo cache de datos manuales -->
                                     <div class="flex justify-end mt-2">
-                                        <button @click="limpiarCacheDatosManuales(); saldoDET = 0; saldoBN = 0; tipoCambio = 3.75; mesAnoTarjetas = '';"
+                                        <button @click="limpiarCacheDatosManuales(); saldoDET = 0; saldoBN = 0; saldoSBP = 0; saldoSBPUSD = 0; tipoCambio = 3.75; mesAnoTarjetas = '';"
                                                 class="text-xs text-gray-500 hover:text-gray-700 underline"
                                                 title="Limpiar valores guardados y resetear a defaults">
                                             Resetear valores
@@ -628,6 +650,8 @@
             conciliationResult: null,
             saldoDET: 0,
             saldoBN: 0,
+            saldoSBP: 0,
+            saldoSBPUSD: 0,
             tipoCambio: 3.75,
             mesAnoTarjetas: '',
             requiredFileTypes: ['mayor', 'extracto', 'resumen'],
@@ -638,6 +662,8 @@
                 const datosCache = {
                     saldoDET: this.saldoDET,
                     saldoBN: this.saldoBN,
+                    saldoSBP: this.saldoSBP,
+                    saldoSBPUSD: this.saldoSBPUSD,
                     tipoCambio: this.tipoCambio,
                     mesAnoTarjetas: this.mesAnoTarjetas,
                     fechaGuardado: new Date().toISOString()
@@ -659,6 +685,8 @@
                         const datos = JSON.parse(datosGuardados);
                         this.saldoDET = datos.saldoDET || 0;
                         this.saldoBN = datos.saldoBN || 0;
+                        this.saldoSBP = datos.saldoSBP || 0;
+                        this.saldoSBPUSD = datos.saldoSBPUSD || 0;
                         this.tipoCambio = datos.tipoCambio || 3.75;
                         this.mesAnoTarjetas = datos.mesAnoTarjetas || '';
                         // Datos manuales cargados desde cache
@@ -2063,9 +2091,19 @@
             
             const fileName = `conciliacion_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.xlsx`;
                     
-                    // Agregar saldos manuales para DET y BN
+                    // Agregar saldos manuales para DET, BN y SBP (opcionalmente)
                     saldosExtractos.set('1042101', this.saldoDET); // DET
                     saldosExtractos.set('1041601', this.saldoBN);   // BN
+                    
+                    // Si se ingresaron saldos manuales para SBP, usarlos (sobreescribir los leídos del Excel)
+                    if (this.saldoSBP && this.saldoSBP > 0) {
+                        console.log('✅ Usando saldo manual para SBP (PEN):', this.saldoSBP);
+                        saldosExtractos.set('1041301', parseFloat(this.saldoSBP));
+                    }
+                    if (this.saldoSBPUSD && this.saldoSBPUSD > 0) {
+                        console.log('✅ Usando saldo manual para SBP (USD):', this.saldoSBPUSD);
+                        saldosExtractos.set('1041302', parseFloat(this.saldoSBPUSD));
+                    }
                     
                     // Mostrar resultados
                     this.conciliationResult = {
@@ -2108,6 +2146,64 @@
                      const sheetName = workbook.SheetNames[0];
                      const worksheet = workbook.Sheets[sheetName];
                     let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+
+                    // LOG SOLICITADO: JSON RAW IBK
+                    // Verificamos si es IBK por config o por nombre de archivo para asegurar el log
+                    const isIBK = (cuentaConfig && (cuentaConfig.alias === 'IBK' || cuentaConfig.alias === 'IBK.USD')) || 
+                                  (file.name && file.name.toUpperCase().includes('IBK'));
+
+                   
+                    
+                    // CORRECCIÓN AUTOMÁTICA PARA IBK.PEN (Formato Octubre 2025)
+                    // El nuevo formato agrega una columna vacía al inicio, desplazando los datos.
+                    // Si detectamos esto en IBK (PEN), eliminamos la primera columna para que coincida con la configuración existente (Date at index 0).
+                    if (cuentaConfig && cuentaConfig.alias === 'IBK') {
+                        let rowsChecked = 0;
+                        let emptyCol0Count = 0;
+                        let validDateCol1Count = 0;
+                        
+                        // Analizar las primeras filas con datos (saltando headers potenciales si es necesario, pero aquí miramos raw)
+                        // Buscamos patrón: Col0 VACÍA y Col1 FECHA
+                        for (let i = 0; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            if (!row || row.length < 2) continue;
+                            
+                            // Verificar si parece una fila de datos (tiene fecha)
+                            // Aceptamos string DD/MM/YYYY o número serial Excel (> 40000)
+                            const col1 = row[1];
+                            const isDateCol1 = (typeof col1 === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(col1)) || 
+                                               (typeof col1 === 'number' && col1 > 30000); // 30000 es ~1982
+                            
+                            if (isDateCol1) {
+                                rowsChecked++;
+                                if (row[0] === "" || row[0] === null || row[0] === undefined) {
+                                    emptyCol0Count++;
+                                    validDateCol1Count++;
+                                }
+                            }
+                            
+                            if (rowsChecked >= 10) break; // Suficiente muestra
+                        }
+                        
+                        // Si encontramos filas de datos y TODAS tienen la col 0 vacía y la col 1 con fecha
+                        if (rowsChecked > 0 && emptyCol0Count === rowsChecked) {
+                            console.log('⚠️ [IBK FIX] Detectado formato desplazado (estilo Oct 2025). Normalizando datos eliminando primera columna vacía...');
+                            jsonData = jsonData.map(row => {
+                                if (Array.isArray(row) && row.length > 0) {
+                                    return row.slice(1);
+                                }
+                                return row;
+                            });
+                            
+                            // Log de verificación post-fix
+                            if (jsonData.length > 0) {
+                                const sampleRow = jsonData.find(r => r && r.length > 0 && ((typeof r[0] === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(r[0])) || (typeof r[0] === 'number' && r[0] > 30000)));
+                                if (sampleRow) {
+                                    console.log('✅ [IBK FIX] Datos normalizados. Ejemplo fila:', sampleRow);
+                                }
+                            }
+                        }
+                    }
                     
 
                     //console.log(`🔍🔍🔍🔍🔍🔍🔍🔍🔍`);
@@ -13767,6 +13863,7 @@
                         const saldoBanco = this.obtenerSaldoBancoPorCuenta(codigoCuenta);
                         const saldoLibros = this.obtenerSaldoLibrosPorCuenta(codigoCuenta);
                         
+                        console.log(`🔍 [CONCILIACION ${nombrePestaña}] Saldo en Banco obtenido:`, saldoBanco);
                         
                         let totalAjustes = 0;
                         
@@ -13779,7 +13876,7 @@
                             [''],
                             ['FECHA', 'CONCEPTO', 'REF', 'IMPORTE', 'PARTE', 'ESTADO', 'DESCRIPCIÓN', 'COMPROBANTE', 'GIRADO', 'IMPORTE'],
                             [''],
-                            ['SALDO EN BANCOS', '', '', '', 0, '', '', '', '', '']           // SALDO EN BANCOS al inicio
+                            ['SALDO EN BANCOS', '', '', '', saldoBanco, '', '', '', '', '']           // SALDO EN BANCOS al inicio
                         ];
                         
                         // Obtener código de cuenta según la pestaña (para todas las pestañas)
@@ -15499,6 +15596,8 @@
                         
                         // Aplicar formato de fecha a la columna FDOC (índice 2, columna C)
                         this.aplicarFormatoFecha(wsMayor, datosMayorCompletos.length, 'C');
+                        // Aplicar formato de fecha a la columna FECHCON (índice 6, columna G)
+                        this.aplicarFormatoFecha(wsMayor, datosMayorCompletos.length, 'G');
                         
                         XLSX.utils.book_append_sheet(wb, wsMayor, "MAYOR.PEN");
                      }
@@ -15511,8 +15610,10 @@
                          
                          const wsMayorUSD = XLSX.utils.aoa_to_sheet(datosCompletos.datosMayorUSD);
                          
-                         // Aplicar formato de fecha a la columna FDOC (índice 2, columna C)
-                         this.aplicarFormatoFecha(wsMayorUSD, datosCompletos.datosMayorUSD.length, 'C');
+                        // Aplicar formato de fecha a la columna FDOC (índice 2, columna C)
+                        this.aplicarFormatoFecha(wsMayorUSD, datosCompletos.datosMayorUSD.length, 'C');
+                        // Aplicar formato de fecha a la columna FECHCON (índice 6, columna G)
+                        this.aplicarFormatoFecha(wsMayorUSD, datosCompletos.datosMayorUSD.length, 'G');
                          
                          XLSX.utils.book_append_sheet(wb, wsMayorUSD, "MAYOR.USD");
                      }
@@ -18751,10 +18852,57 @@
                             
                             // Determinar celda según el banco
                             if (cuentaCodigo.startsWith('1041501') || cuentaCodigo.startsWith('1041505') || cuentaCodigo.startsWith('1041502')) {
-                                // BCP: Celda E6
-                                const cellE6 = worksheet['E6'];
-                                if (cellE6 && cellE6.v !== undefined) {
-                                    saldo = cellE6.v;
+                                console.log('🔍 [SALDO BCP DEBUG] Buscando saldo para cuenta:', cuentaCodigo);
+                                
+                                // BCP: Leer primera fila de datos (generalmente fila 6) y obtener columna Saldo (columna E)
+                                // Estrategia: Buscar el primer valor numérico en la columna E (Saldo) a partir de la fila de datos (fila 6, índice 5)
+                                const range = XLSX.utils.decode_range(worksheet['!ref']);
+                                let saldoEncontrado = null;
+                                
+                                // Loguear rango de celdas
+                                console.log('🔍 [SALDO BCP DEBUG] Rango hoja:', worksheet['!ref']);
+                                
+                                // BCP suele tener headers en fila 5 (índice 4) y datos desde fila 6 (índice 5)
+                                // Columna E es índice 4.
+                                
+                                // Buscar primer saldo válido en columna E a partir de fila 6
+                                for (let r = 5; r <= Math.min(range.e.r, 20); r++) { // Buscar en primeras 15 filas de datos
+                                    const cellAddress = XLSX.utils.encode_cell({c: 4, r: r}); // Columna E
+                                    const cell = worksheet[cellAddress];
+                                    
+                                    console.log(`🔍 [SALDO BCP DEBUG] Revisando celda ${cellAddress}:`, cell ? cell.v : 'VACÍA');
+                                    
+                                    if (cell && (typeof cell.v === 'number' || (typeof cell.v === 'string' && !isNaN(parseFloat(cell.v.replace(/,/g, '')))))) {
+                                        saldoEncontrado = cell.v;
+                                        console.log(`✅ [SALDO BCP DEBUG] Saldo encontrado en ${cellAddress}:`, saldoEncontrado);
+                                        break; // Tomar el primer saldo encontrado
+                                    }
+                                }
+                                
+                                if (saldoEncontrado !== null) {
+                                    saldo = saldoEncontrado;
+                                } else {
+                                    // Fallback a E6 directo si el bucle falla
+                                    const cellE6 = worksheet['E6'];
+                                    console.log(`⚠️ [SALDO BCP DEBUG] Fallback a E6:`, cellE6 ? cellE6.v : 'VACÍA');
+                                    
+                                    if (cellE6 && cellE6.v !== undefined) {
+                                        saldo = cellE6.v;
+                                    }
+                                }
+                                
+                                // Si sigue siendo null, intentar buscar en otras columnas cercanas (D o F) por si acaso hubo desplazamiento
+                                if (saldo === null) {
+                                    console.log('⚠️ [SALDO BCP DEBUG] Saldo sigue siendo null. Intentando búsqueda ampliada en filas 5-10, columnas C-F...');
+                                    for (let r = 5; r <= 10; r++) {
+                                         for (let c = 2; c <= 5; c++) { // C=2, D=3, E=4, F=5
+                                             const cellAddress = XLSX.utils.encode_cell({c: c, r: r});
+                                             const cell = worksheet[cellAddress];
+                                             if (cell && typeof cell.v === 'number') {
+                                                 console.log(`🔍 [SALDO BCP DEBUG] Candidato en ${cellAddress}: ${cell.v}`);
+                                             }
+                                         }
+                                    }
                                 }
                             } else if (cuentaCodigo.startsWith('1041401') || cuentaCodigo.startsWith('1041402')) {
                                 // SANTANDER: Celda B5
@@ -18763,27 +18911,65 @@
                                     saldo = cellB5.v;
                                 }
                             } else if (cuentaCodigo.startsWith('1041201') || cuentaCodigo.startsWith('1041202')) {
-                                // BBVA: Última fila con datos en columna F
+                                // BBVA: Buscar fila con "Saldo Final"
+                                console.log('🔍 [SALDO BBVA DEBUG] Buscando saldo para BBVA...');
                                 
                                 const range = XLSX.utils.decode_range(worksheet['!ref']);
+                                let saldoEncontrado = null;
                                 
-                                let filasRevisadas = 0;
-                                for (let row = range.e.r; row >= range.s.r; row--) {
-                                    filasRevisadas++;
-                                    const cellAddress = XLSX.utils.encode_cell({c: 5, r: row}); // Columna F (índice 5)
-                                    const cell = worksheet[cellAddress];
-                                    
-                                    if (cell && cell.v !== undefined && cell.v !== null && cell.v !== '') {
-                                        saldo = cell.v;
-                                        break;
+                                // Buscar desde el final hacia arriba
+                                for (let r = range.e.r; r >= range.s.r; r--) {
+                                    // Revisar celdas de la fila para encontrar "Saldo Final"
+                                    for (let c = range.s.c; c <= range.e.c; c++) {
+                                        const cellAddress = XLSX.utils.encode_cell({c: c, r: r});
+                                        const cell = worksheet[cellAddress];
+                                        
+                                        if (cell && cell.v && typeof cell.v === 'string' && cell.v.toUpperCase().includes('SALDO FINAL')) {
+                                            console.log(`🔍 [SALDO BBVA DEBUG] Etiqueta 'Saldo Final' encontrada en ${cellAddress}: "${cell.v}"`);
+                                            
+                                            // Buscar el último valor numérico en la misma fila
+                                            for (let cVal = range.e.c; cVal >= range.s.c; cVal--) {
+                                                const valAddress = XLSX.utils.encode_cell({c: cVal, r: r});
+                                                const valCell = worksheet[valAddress];
+                                                
+                                                // Ignorar si es la misma celda de la etiqueta
+                                                if (valAddress === cellAddress) continue;
+
+                                                if (valCell && (typeof valCell.v === 'number' || (typeof valCell.v === 'string' && /^-?[\d,]+\.?\d*$/.test(valCell.v.trim())))) {
+                                                    // Verificar que no sea un número de página o algo irrelevante (opcional, pero BBVA suele poner el saldo al final)
+                                                    saldoEncontrado = valCell.v;
+                                                    console.log(`✅ [SALDO BBVA DEBUG] Saldo candidato encontrado en ${valAddress}: ${saldoEncontrado}`);
+                                                    break;
+                                                }
+                                            }
+                                            break; // Salir del bucle de columnas si ya encontramos la etiqueta
+                                        }
                                     }
                                     
-                                    if (filasRevisadas > 20) {
-                                        break;
-                                    }
+                                    if (saldoEncontrado !== null) break; // Salir del bucle de filas si ya tenemos saldo
+                                    
+                                    // Limite de búsqueda hacia atrás (ej. 50 filas)
+                                    if (range.e.r - r > 50) break; 
                                 }
                                 
-                                if (saldo === null) {
+                                if (saldoEncontrado !== null) {
+                                    saldo = saldoEncontrado;
+                                } else {
+                                    console.log('⚠️ [SALDO BBVA DEBUG] No se encontró etiqueta "Saldo Final". Usando método fallback (último valor columna F).');
+                                    // Fallback: lógica anterior (Última fila con datos en columna F - índice 5)
+                                    let filasRevisadas = 0;
+                                    for (let row = range.e.r; row >= range.s.r; row--) {
+                                        filasRevisadas++;
+                                        const cellAddress = XLSX.utils.encode_cell({c: 5, r: row}); // Columna F (índice 5)
+                                        const cell = worksheet[cellAddress];
+                                        
+                                        if (cell && cell.v !== undefined && cell.v !== null && cell.v !== '') {
+                                            saldo = cell.v;
+                                            break;
+                                        }
+                                        
+                                        if (filasRevisadas > 20) break;
+                                    }
                                 }
                             } else if (cuentaCodigo.startsWith('1041301') || cuentaCodigo.startsWith('1041302')) {
                                 // SCOTIABANK: Celda A5 - extraer saldo contable
@@ -18814,19 +19000,80 @@
                                 } else {
                                 }
                             } else if (cuentaCodigo.startsWith('1041101') || cuentaCodigo.startsWith('1041102')) {
-                                // INTERBANK: Celda J10
+                                // INTERBANK: Estrategia robusta
+                                console.log('🔍 [SALDO IBK DEBUG] Buscando saldo para Interbank...');
                                 
-                                const cellJ10 = worksheet['J10'];
-                                
-                                if (cellJ10 && cellJ10.v !== undefined) {
-                                    saldo = cellJ10.v;
-                                } else {
+                                const range = XLSX.utils.decode_range(worksheet['!ref']);
+                                let saldoEncontrado = null;
+                                let colSaldoIndex = -1;
+
+                                // ESTRATEGIA 1: Buscar header "Saldo contable"
+                                for (let r = range.s.r; r <= Math.min(range.e.r, 20); r++) { 
+                                    for (let c = range.s.c; c <= range.e.c; c++) {
+                                        const cellAddress = XLSX.utils.encode_cell({c: c, r: r});
+                                        const cell = worksheet[cellAddress];
+                                        
+                                        if (cell && cell.v && typeof cell.v === 'string') {
+                                            const val = cell.v.toString().toUpperCase().replace(/\s+/g, ' ').trim();
+                                            if (val.includes('SALDO CONTABLE')) {
+                                                console.log(`🔍 [SALDO IBK DEBUG] Header "Saldo contable" encontrado en ${cellAddress}`);
+                                                colSaldoIndex = c;
+                                                // Buscar primer valor numérico debajo
+                                                for (let offset = 1; offset <= 10; offset++) { // Buscamos más abajo por si acaso
+                                                    const valAddress = XLSX.utils.encode_cell({c: c, r: r + offset});
+                                                    const valCell = worksheet[valAddress];
+                                                    if (valCell && (typeof valCell.v === 'number' || (typeof valCell.v === 'string' && /^-?[\d,]+\.?\d*$/.test(valCell.v.trim())))) {
+                                                         saldoEncontrado = valCell.v;
+                                                         console.log(`✅ [SALDO IBK DEBUG] Saldo encontrado por header en ${valAddress}: ${saldoEncontrado}`);
+                                                         break;
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (saldoEncontrado !== null || colSaldoIndex !== -1) break;
+                                }
+
+                                // ESTRATEGIA 2: Si no se encontró por header, detectar desplazamiento por columna vacía
+                                if (saldoEncontrado === null) {
+                                    console.log('⚠️ [SALDO IBK DEBUG] No se encontró header. Intentando detección por estructura...');
+                                    // Chequear si la columna A (índice 0) está vacía en las primeras filas de datos (ej. fila 10 a 15)
+                                    let col0Vacia = true;
+                                    let filasConDatos = 0;
                                     
-                                    // Verificar celdas cercanas por si acaso
-                                    const cellsToCheck = ['I10', 'K10', 'J9', 'J11', 'J8', 'J12'];
-                                    cellsToCheck.forEach(cellAddr => {
-                                        const cell = worksheet[cellAddr];
-                                    });
+                                    // Asumimos datos empiezan aprox fila 10
+                                    for (let r = 8; r <= 15; r++) {
+                                         const cellA = worksheet[XLSX.utils.encode_cell({c: 0, r: r})];
+                                         const cellB = worksheet[XLSX.utils.encode_cell({c: 1, r: r})]; // Fecha usualmente
+                                         
+                                         // Si hay fecha en B y A está vacía
+                                         if (cellB && cellB.v) {
+                                             filasConDatos++;
+                                             if (cellA && cellA.v) {
+                                                 col0Vacia = false;
+                                             }
+                                         }
+                                    }
+
+                                    // Si parece desplazado (Col 0 vacía), Saldo suele estar en Columna J (índice 9). Si no, en I (índice 8).
+                                    const targetCol = (col0Vacia && filasConDatos > 0) ? 9 : 8; // 9=J, 8=I
+                                    console.log(`🔍 [SALDO IBK DEBUG] Detección estructura: Col0Vacía=${col0Vacia}, Usando Columna índice ${targetCol}`);
+                                    
+                                    // Buscar primer número en esa columna
+                                     for (let r = 8; r <= 25; r++) {
+                                         const cellAddress = XLSX.utils.encode_cell({c: targetCol, r: r});
+                                         const cell = worksheet[cellAddress];
+                                         if (cell && (typeof cell.v === 'number' || (typeof cell.v === 'string' && /^-?[\d,]+\.?\d*$/.test(cell.v.trim())))) {
+                                             saldoEncontrado = cell.v;
+                                             console.log(`✅ [SALDO IBK DEBUG] Saldo encontrado por estructura en ${cellAddress}: ${saldoEncontrado}`);
+                                             break;
+                                         }
+                                     }
+                                }
+                                
+                                if (saldoEncontrado !== null) {
+                                    saldo = saldoEncontrado;
                                 }
                             }
                             
