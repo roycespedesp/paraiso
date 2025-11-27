@@ -6106,8 +6106,10 @@
                     
                     // Verificar criterios del PASO 8
                     const esLibroObjetivo = librosObjetivo.includes(String(libro || '').trim());
+                    const descripcion = (filaMayor[idxM.descrip] || '').toString().toUpperCase(); // Obtener descripción
                     
-                    if (esLibroObjetivo) {
+                    // CAMBIO SOLICITADO: Excluir registros con descripción "ITF" en Paso 8
+                    if (esLibroObjetivo && !descripcion.includes('ITF')) {
                         // Contar por libro
                         if (String(libro || '').trim() === '02') candidatosLibro02++;
                         else if (String(libro || '').trim() === '03') candidatosLibro03++;
@@ -6211,6 +6213,10 @@
                     const fechaExtractoRaw = filaExtracto[idxE.fecha] || '';
                     const montoExtractoRaw = filaExtracto[idxE.monto] || '0';
                     const operacionNumero = filaExtracto[6] || ''; // Columna G - Operación Número
+                    const descripcionExtracto = (filaExtracto[idxE.descripcion] || '').toString().toUpperCase();
+
+                    // CAMBIO SOLICITADO: Excluir si el registro del extracto también dice "ITF"
+                    if (descripcionExtracto.includes('ITF')) continue;
                     
                     // Normalizar fecha y monto del extracto - CORREGIDO: usar misma función que Mayor
                     const fechaExtractoNormalizada = this.normalizarFecha(fechaExtractoRaw);
@@ -6508,8 +6514,10 @@
                     
                     // Verificar criterios del PASO 9
                     const esLibroObjetivo = librosObjetivo.includes(String(libro || '').trim());
-                    
-                    if (esLibroObjetivo) {
+                    const descripcion = (filaMayor[idxM.descrip] || '').toString().toUpperCase();
+
+                    // CAMBIO SOLICITADO: Excluir registros con descripción "ITF" en Paso 9
+                    if (esLibroObjetivo && !descripcion.includes('ITF')) {
                         // Contar por libro
                         if (String(libro || '').trim() === '02') candidatosLibro02++;
                         else if (String(libro || '').trim() === '03') candidatosLibro03++;
@@ -7394,6 +7402,10 @@
                     const fechaExtractoRaw = filaExtracto[idxE.fecha] || '';
                     const montoExtractoRaw = filaExtracto[idxE.monto] || '0';
                     const operacionNumero = filaExtracto[6] || ''; // Columna G - Operación Número
+                    const descripcionExtracto = (filaExtracto[idxE.descripcion] || '').toString().toUpperCase();
+
+                    // CAMBIO SOLICITADO: Excluir si el registro del extracto también dice "ITF" (Paso 9)
+                    if (descripcionExtracto.includes('ITF')) continue;
                     
                     // Normalizar fecha y monto del extracto
                     const fechaExtractoNormalizada = this.normalizarFecha(fechaExtractoRaw);
