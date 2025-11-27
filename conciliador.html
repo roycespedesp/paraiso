@@ -14596,7 +14596,7 @@
                                 cargosBancosParte1.forEach(cargo => {
                                     const montoCargo = esIBK ? (parseFloat(cargo[cargoCol]) || 0) : (parseFloat(cargo[montoCol]) || 0);
                                     
-                                    // Usar mapeo de columnas correcto para BBVA, SBP e IBK
+                                    // Usar mapeo de columnas correcto para BBVA, SBP, IBK y SANT
                                     let concepto, ref;
                                     if (nombrePestaña === 'BBVA' || nombrePestaña === 'BBVA.USD') {
                                         concepto = cargo[4] || '';  // Columna E (Concepto)
@@ -14608,6 +14608,10 @@
                                         /*Cambio solicitado: OBSERVACIÓN 1 - Cambiar columna D por C en campo concepto para IBK - 27102025 19:47*/
                                         concepto = cargo[2] || '';  // Columna C (Nro. de operación)
                                         ref = cargo[1] || '';       // Columna B (Fecha proceso)
+                                    } else if (nombrePestaña === 'SANT' || nombrePestaña === 'SANT.USD') {
+                                        // CAMBIO SOLICITADO: Para SANT, CONCEPTO debe ser columna E (descripción) y REF debe ser columna D (referencia)
+                                        concepto = cargo[4] || '';  // Columna E (Descripción operación)
+                                        ref = cargo[3] || '';       // Columna D (Referencia)
                                     } else {
                                         concepto = cargo[2] || '';  // Columna C (descripción)
                                         ref = cargo[6] || '';       // Columna G (Nro de Operación)
@@ -15638,13 +15642,19 @@
                                  let datosParaAlmacenar = extractoInfo.datosExtracto;
                                  let datosParaExcel = extractoInfo.datosExtracto;
                                  
-                                 if (codigoCuenta === '1041501') {
-                                     //console.log(`🔍 [FILTER] Aplicando filtro de exclusión a BCP.01 (${codigoCuenta})`);
-                                     //console.log(`🔍 [FILTER] Datos originales BCP.01:`, extractoInfo.datosExtracto.length, 'registros');
-                                     datosParaAlmacenar = this.filtrarRegistrosExclusionBCP01(extractoInfo.datosExtracto);
-                                     datosParaExcel = datosParaAlmacenar; // Usar datos filtrados también para Excel
-                                     //console.log(`🔍 [FILTER] Datos filtrados BCP.01:`, datosParaAlmacenar.length, 'registros');
-                                 }
+                                if (codigoCuenta === '1041501') {
+                                    //console.log(`🔍 [FILTER] Aplicando filtro de exclusión a BCP.01 (${codigoCuenta})`);
+                                    //console.log(`🔍 [FILTER] Datos originales BCP.01:`, extractoInfo.datosExtracto.length, 'registros');
+                                    datosParaAlmacenar = this.filtrarRegistrosExclusionBCP01(extractoInfo.datosExtracto);
+                                    datosParaExcel = datosParaAlmacenar; // Usar datos filtrados también para Excel
+                                    //console.log(`🔍 [FILTER] Datos filtrados BCP.01:`, datosParaAlmacenar.length, 'registros');
+                                } else if (codigoCuenta === '1041101') {
+                                    //console.log(`🔍 [FILTER] Aplicando filtro de exclusión a IBK (${codigoCuenta})`);
+                                    //console.log(`🔍 [FILTER] Datos originales IBK:`, extractoInfo.datosExtracto.length, 'registros');
+                                    datosParaAlmacenar = this.filtrarRegistrosExclusionIBK(extractoInfo.datosExtracto);
+                                    datosParaExcel = datosParaAlmacenar; // Usar datos filtrados también para Excel
+                                    //console.log(`🔍 [FILTER] Datos filtrados IBK:`, datosParaAlmacenar.length, 'registros');
+                                }
                                  
                                 // Almacenar datos de extracto en JSON (filtrados para BCP.01)
                                 window.datosHojaTrabajoJSON.extractos[codigoCuenta] = datosParaAlmacenar;
@@ -16388,6 +16398,103 @@
                     
                 } catch (error) {
                     //console.error('❌ Error filtrando registros de exclusión BCP.01:', error);
+                    return datosExtracto; // Retornar datos originales en caso de error
+                }
+            },
+
+            filtrarRegistrosExclusionIBK(datosExtracto) {
+                try {
+                    // Términos de exclusión específicos para IBK (mismos que en filtrarRegistrosIBK)
+                    const terminosExclusion = [
+                        'AMEX',
+                        'DINERS',
+                        'MASTERCARD'
+                    ];
+                    
+                    if (!datosExtracto || !Array.isArray(datosExtracto) || datosExtracto.length === 0) {
+                        return datosExtracto;
+                    }
+                    
+                    // Buscar el header para identificar las columnas de Movimiento y Descripción
+                    let headerRowIndex = -1;
+                    let colMovimiento = -1;
+                    let colDescripcion = -1;
+                    
+                    for (let i = 0; i < Math.min(20, datosExtracto.length); i++) {
+                        const fila = datosExtracto[i];
+                        if (Array.isArray(fila)) {
+                            for (let j = 0; j < fila.length; j++) {
+                                const celda = String(fila[j] || '').toLowerCase();
+                                if (celda.includes('movimiento')) {
+                                    colMovimiento = j;
+                                    headerRowIndex = i;
+                                }
+                                if (celda.includes('descripción') || celda.includes('descripcion')) {
+                                    colDescripcion = j;
+                                    headerRowIndex = i;
+                                }
+                            }
+                            if (headerRowIndex >= 0) break;
+                        }
+                    }
+                    
+                    if (headerRowIndex === -1) {
+                        console.warn('⚠️ No se encontró header en IBK, retornando datos originales');
+                        return datosExtracto;
+                    }
+                    
+                    // Filtrar registros que NO contengan términos de exclusión
+                    const datosFiltrados = [];
+                    let registrosEliminados = 0;
+                    
+                    for (let i = 0; i < datosExtracto.length; i++) {
+                        const fila = datosExtracto[i];
+                        
+                        // Mantener header y filas que no son datos
+                        if (i <= headerRowIndex || !Array.isArray(fila)) {
+                            datosFiltrados.push(fila);
+                            continue;
+                        }
+                        
+                        // Buscar términos en Movimiento y Descripción
+                        let contieneTerminoExclusion = false;
+                        
+                        // Revisar columna Movimiento
+                        if (colMovimiento >= 0 && fila.length > colMovimiento) {
+                            const movimiento = String(fila[colMovimiento] || '').toUpperCase();
+                            for (const termino of terminosExclusion) {
+                                if (movimiento.includes(termino)) {
+                                    contieneTerminoExclusion = true;
+                                    registrosEliminados++;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Si no se encontró en Movimiento, revisar Descripción
+                        if (!contieneTerminoExclusion && colDescripcion >= 0 && fila.length > colDescripcion) {
+                            const descripcion = String(fila[colDescripcion] || '').toUpperCase();
+                            for (const termino of terminosExclusion) {
+                                if (descripcion.includes(termino)) {
+                                    contieneTerminoExclusion = true;
+                                    registrosEliminados++;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Solo agregar si NO contiene términos de exclusión
+                        if (!contieneTerminoExclusion) {
+                            datosFiltrados.push(fila);
+                        }
+                    }
+                    
+                    console.log(`🔍 [FILTER IBK] Filtrados ${registrosEliminados} registros de ${datosExtracto.length} totales`);
+                    
+                    return datosFiltrados;
+                    
+                } catch (error) {
+                    console.error('❌ Error filtrando registros de exclusión IBK:', error);
                     return datosExtracto; // Retornar datos originales en caso de error
                 }
             },
